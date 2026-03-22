@@ -193,17 +193,17 @@ function CombinedSection() {
             <img src={HeroLogo.src} alt="Top AI Academy in India" className="w-48 object-contain mx-auto" />
 
             {/* Stat Cards */}
-            <div className="grid grid-cols-2 gap-10 w-full ">
+            <div className="grid grid-cols-2 gap-3 md:gap-10 w-full ">
               {stats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-3 bg-[#EAF4EC] rounded-xl px-4 py-3 shadow-sm"
+                  className="flex items-center gap-2 bg-[#EAF4EC] rounded-xl px-2 py-2 md:px-4 md:py-3 shadow-sm min-w-0"
                 >
                   {/* Icon */}
                   <div className="text-2xl">{stat.icon}</div>
 
                   {/* Text */}
-                  <div className="text-left">
+                  <div className="text-left min-w-0">
                     <p className="font-semibold text-lg leading-tight">
                       {stat.value}
                     </p>
@@ -1287,13 +1287,13 @@ function MonthlyUpgradeSectionLast() {
           Safe AI Tools you will learn
         </h2>
 
-        <div className="flex flex-wrap justify-center gap-6 mb-16">
+        <div className="flex flex-nowrap overflow-x-auto justify-center gap-6 mb-16 scrollbar-hide">
           {tools.map((tool, idx) => (
             <img
               key={idx}
               src={tool}
               alt="tool"
-              className="w-10 h-10 object-contain"
+              className="w-10 h-10 object-contain flex-shrink-0"
             />
           ))}
         </div>
