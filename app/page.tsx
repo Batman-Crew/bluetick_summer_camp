@@ -177,7 +177,7 @@ function CombinedSection() {
 
   return (
     <section
-      className="py-12 px-15"
+      className="py-12 md:px-15"
       style={{
         backgroundImage: `url(${HeroMiddleBg.src})`,
         backgroundSize: 'cover',
@@ -185,26 +185,26 @@ function CombinedSection() {
       }}
     >
       <div className="mx-auto">
-        <div className="rounded-3xl p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        <div className="rounded-3xl p-6 md:p-10 grid grid-cols-1 w-full  md:grid-cols-2 gap-10 items-center">
 
           {/* LEFT SIDE */}
-          <div className="flex flex-col items-center md:max-w-xl md:items-start w-full gap-6">
+          <div className="flex flex-col items-center md:max-w-xl md:items-start w-full   gap-6">
             {/* Academy Badge */}
             <img src={HeroLogo.src} alt="Top AI Academy in India" className="w-48 object-contain mx-auto" />
 
             {/* Stat Cards */}
-            <div className="grid grid-cols-2 gap-3 md:gap-10 w-full ">
+            <div className="grid grid-cols-2  gap-3 md:gap-10 w-full ">
               {stats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 bg-[#EAF4EC] rounded-xl px-2 py-2 md:px-4 md:py-3 shadow-sm min-w-0"
+                  className="flex items-center gap-2 bg-[#EAF4EC] rounded-xl px-2 py-2 md:px-4 md:py-3 shadow-sm "
                 >
                   {/* Icon */}
                   <div className="text-2xl">{stat.icon}</div>
 
                   {/* Text */}
-                  <div className="text-left min-w-0">
-                    <p className="font-semibold text-lg leading-tight">
+                  <div className="text-left ">
+                    <p className="font-semibold text-lg ">
                       {stat.value}
                     </p>
                     <p className="text-sm text-gray-600 leading-tight">
@@ -1287,14 +1287,27 @@ function MonthlyUpgradeSectionLast() {
           Safe AI Tools you will learn
         </h2>
 
-        <div className="flex flex-nowrap overflow-x-auto justify-center gap-6 mb-16 scrollbar-hide">
+        <style>{`
+          @keyframes tools-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          @media (max-width: 767px) {
+            .tools-track { animation: tools-scroll 10s linear infinite; }
+          }
+        `}</style>
+        {/* Mobile: auto-scroll marquee */}
+        <div className="relative w-full overflow-hidden mb-16 md:hidden">
+          <div className="flex tools-track w-max gap-8">
+            {[...tools, ...tools].map((tool, idx) => (
+              <img key={idx} src={tool} alt="tool" className="w-10 h-10 object-contain flex-shrink-0" />
+            ))}
+          </div>
+        </div>
+        {/* Desktop: static centered row */}
+        <div className="hidden md:flex flex-wrap justify-center gap-8 mb-16">
           {tools.map((tool, idx) => (
-            <img
-              key={idx}
-              src={tool}
-              alt="tool"
-              className="w-10 h-10 object-contain flex-shrink-0"
-            />
+            <img key={idx} src={tool} alt="tool" className="w-10 h-10 object-contain" />
           ))}
         </div>
 
