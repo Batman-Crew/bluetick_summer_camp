@@ -1399,111 +1399,133 @@ function TestimonialsSection() {
       name: "Sandya Dham",
       role: "Parent",
       text: "We took admission for both my son and daughter. I think this is really useful and future oriented compared to just sitting at home and spending time on ott and social media.",
+      image: "/testimonial_images/Sandya Dham.png",
     },
     {
       name: "Nithil Mohan",
       role: "8th Grade, IGCSE",
       text: "I am grade 8. The AI filmmaking is my most favorite session. I made some scifi images and turned that into a teaser.. Classes are very interesting..",
+      image: "/testimonial_images/Nithil Mohan.png",
     },
     {
       name: "Joshua",
       role: "9th Grade, CBSE",
       text: "I made a chatbot and showed it to my school teachers. Now I feel I can do more things with AI.",
+      image: "/testimonial_images/Joshua.png",
     },
     {
       name: "Karthik Vasan",
       role: "Parent",
       text: "We enrolled our son just to keep him engaged during holidays. But this turned out to be more useful than we expected. He started asking better questions and even tried explaining AI concepts at home. The classes were well-paced. Overall, a good experience for both kids and parents.",
+      image: "/testimonial_images/Karthik Vasan.png",
     },
     {
       name: "Neha Bhat",
       role: "Parent",
       text: "My son is in 7th standard and usually gets bored with online classes. Now he is doing public speaking using some AI websites which I really liked.",
+      image: "/testimonial_images/Neha Bhat.png",
     },
     {
       name: "Sinamika",
       role: "6th Grade, CBSE",
       text: "The teachers were patient and explained things very patiently. I thought AI is only chatgpt but now I understand what all I can do with AI.",
+      image: "/testimonial_images/Sinamika.png",
     },
     {
       name: "Vikram.M",
       role: "Parent",
       text: "I felt AI is too early for my daughter who is only 11 years now.. But after 2 classes, she started explaining things to me. The way they teach to the kids are fantastic.",
+      image: "",
     },
     {
       name: "Viya Vivek",
       role: "6th Grade, ICSE",
       text: "I didn't know anything about AI before joining. Now I know how to use it and for what I can use it. The classes were not boring. We were building things and testing them. I liked the chatbot part the most. I want to learn more in future.",
+      image: "/testimonial_images/Viya Vivek.png",
     },
     {
       name: "Rohan Thangadurai",
       role: "Parent",
       text: "My son got fully engaged into this.. As a parent, I felt happy that he learned something futuristic instead of just spending time on online games or tv..",
+      image: "/testimonial_images/Rohan Thangadurai.png",
     },
     {
       name: "Mohd Hashim",
       role: "Parent",
       text: "They kept it very interesting and practical.. my daughter is able to think differently after the classes..she is producing a lot of stuff now quickly and it is impressing..",
+      image: "/testimonial_images/Mohd Hashim.png",
     },
     {
       name: "Aadhya Shyam",
       role: "7th Grade, IGCSE",
       text: "I liked making the chatbot myself, I'm now in 7th grade. It was fun and I showed it to my friends also. I thank Harsh sir for this.",
+      image: "",
     },
     {
       name: "Aviyukt",
       role: "8th Grade, CBSE",
       text: "Mentors are very supportive, it was fun learning so many things in AI.. I created my AI buddy to teach me subjects which I don't know..",
+      image: "",
     },
     {
       name: "Aisha Kashyap",
       role: "Parent",
       text: "I am very relieved my daughter is spending so much time out of social media and doing something productive for her future careers.",
+      image: "",
     },
     {
       name: "Krithin Keerthi",
       role: "7th Grade, CBSE",
       text: "At first I thought this will be difficult. But it was easy to follow. We learned step by step. I made a small project and my parents were happy when I showed it. I also liked that we can try things ourselves and not just listen.",
+      image: "/testimonial_images/Krithin Keerthi.png",
     },
     {
       name: "Virender Singh",
       role: "Parent",
       text: "It is good that they focus on building small projects. Kids feel happy when they create something. It is very surprising that small kids can create chatbots and websites in a day or less.",
+      image: "/testimonial_images/Virendra Singh.png",
     },
     {
       name: "Suvi",
       role: "6th Grade, ICSE",
       text: "The classes were interesting and not boring like usual online classes.",
+      image: "/testimonial_images/Suvi.png",
     },
     {
       name: "Milan Sharma",
       role: "7th Grade, ICSE",
       text: "The best part was we could ask doubts anytime. Even if I didn't understand something, they helped me. I made some mistakes but corrected them later. I learned how to think before asking AI. It was a nice experience overall.",
+      image: "/testimonial_images/Milan Sharma.png",
     },
     {
       name: "Patrick.J",
       role: "Parent",
       text: "My daughter usually doesn't sit for long online classes, but here she was focused most of the time.",
+      image: "/testimonial_images/Patrick.png",
     },
     {
       name: "Priyanka Ghosh",
       role: "Parent",
       text: "My son started exploring AI tools on his own after the class. That was nice to see. Good experience.",
+      image: "",
     },
     {
       name: "Dhiyan",
       role: "9th Grade, CBSE",
       text: "At first I thought AI means coding and technical and it will be difficult, but it was not at all difficult. I really enjoyed. I liked the competition in the end.",
+      image: "",
     },
     {
       name: "Armaan Goel",
       role: "Parent",
       text: "I feel this is a must starting point for children in AI. They are not overloading them with too much information. Everything is explained in a simple way. My child was able to follow and also try things independently.",
+      image: "",
     },
     {
       name: "Pranav Sridhar",
       role: "8th Grade, IB",
       text: "I have created my first AI personal mentor which can teach anything technical with images and infographics.. thanks to the interactive sessions.",
+      image: "/testimonial_images/Pranav Sridhar.png",
     },
   ]
 
@@ -1537,9 +1559,22 @@ function TestimonialsSection() {
                 {"★★★★★"}
               </div>
               <p className="text-gray-600 text-sm leading-relaxed flex-1">"{t.text}"</p>
-              <div>
-                <p className="font-semibold text-sm text-black">{t.name}</p>
-                <p className="text-xs text-gray-400">{t.role}</p>
+              <div className="flex items-center gap-3">
+                {t.image ? (
+                  <img
+                    src={t.image}
+                    alt={t.name}
+                    className="w-15 h-15 rounded-full object-cover shrink-0"
+                  />
+                ) : (
+                  <div className="w-15 h-15 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-semibold shrink-0">
+                    {t.name.charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <p className="font-semibold text-sm text-black">{t.name}</p>
+                  <p className="text-xs text-gray-400">{t.role}</p>
+                </div>
               </div>
             </div>
           ))}
