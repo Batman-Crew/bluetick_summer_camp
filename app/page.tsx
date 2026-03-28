@@ -1567,7 +1567,7 @@ function TestimonialsSection() {
                     className="w-15 h-15 rounded-full object-cover shrink-0"
                   />
                 ) : (
-                  <div className="w-15 h-15 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-semibold shrink-0">
+                  <div className="w-15 h-15 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-md font-semibold shrink-0">
                     {t.name.charAt(0)}
                   </div>
                 )}
