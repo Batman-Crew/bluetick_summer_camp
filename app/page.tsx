@@ -591,7 +591,15 @@ function AIShapingSection() {
 
 
 
- function LearningJourneySection() {
+function getVideoEmbed(url: string): { type: "iframe"; src: string } | { type: "video"; src: string } {
+  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+  if (driveMatch) {
+    return { type: "iframe", src: `https://drive.google.com/file/d/${driveMatch[1]}/preview` };
+  }
+  return { type: "video", src: url };
+}
+
+function LearningJourneySection() {
   const weeks = [
   {
     week: "Week 1: Session 1",
@@ -604,6 +612,7 @@ function AIShapingSection() {
     badgeColor: "bg-[#6B5CA5] text-white",
     layout: "two",
     handsOn: "The \"Reverse Prompt\" challenge — guessing the prompt behind an image.",
+    video: "/videos/Session 1.mp4",
   },
   {
     week: "Week 1: Session 2",
@@ -616,6 +625,7 @@ function AIShapingSection() {
     badgeColor: "bg-[#3F5166] text-white",
     layout: "two",
     handsOn: "Building a \"Personal AI Mentor\" for their favorite hobby (Gaming, Cricket, or Space).",
+    video: "/videos/Session 2.mp4",
   },
   {
     week: "Week 2: Session 3",
@@ -628,6 +638,7 @@ function AIShapingSection() {
     badgeColor: "bg-[#4B5E52] text-white",
     layout: "two",
     handsOn: "Creating a high-definition Personal AI Avatar in 5 different professional styles.",
+    video: "/videos/Session 3.mp4",
   },
   {
     week: "Week 2: Session 4",
@@ -640,6 +651,7 @@ function AIShapingSection() {
     badgeColor: "bg-[#7A4A42] text-white",
     layout: "two",
     handsOn: "Creating a stunning presentation for your business idea or solving an environment problem (like e-waste management).",
+    video: "/videos/Session 4.mp4",
   },
   {
     week: "Week 3: Session 5",
@@ -652,6 +664,7 @@ function AIShapingSection() {
     badgeColor: "bg-[#7A6B42] text-white",
     layout: "two",
     handsOn: "Creating an Original Theme Song for their upcoming final project.",
+    video: "/videos/Session 5.mp4",
   },
   {
     week: "Week 3: Session 6",
@@ -664,6 +677,7 @@ function AIShapingSection() {
     badgeColor: "bg-[#6B4A7A] text-white",
     layout: "two",
     handsOn: "Directing a 30-second teaser for a sci-fi movie they've imagined.",
+    video: "/videos/Session 6.mp4",
   },
   {
     week: "Week 4: Session 7",
@@ -676,6 +690,7 @@ function AIShapingSection() {
     badgeColor: "bg-[#7A6A55] text-white",
     layout: "two",
     handsOn: "Design a chatbot to answer questions on science/math subjects by creating and retrieving memory in AI.",
+    video: "/videos/Session 7.mp4",
   },
   {
     week: "Week 4: Session 8",
@@ -689,6 +704,8 @@ function AIShapingSection() {
     layout: "two",
     handsOn: "Create & present with AI to solve a real-world problem in the future with slides, images & videos.",
     footer: "🎓 Students receive AI Completion Certificate",
+    video: "",
+    image: "/videos/Session 8.png",
   },
 ]
 
@@ -724,7 +741,7 @@ function AIShapingSection() {
 
         {/* Grid */}
         <div className="flex flex-wrap justify-center gap-6 ">
-          {weeks.map((week, idx) => (
+          {weeks?.map((week, idx) => (
             <div
                 key={idx}
                 className={`${week.bg} p-6 rounded-3xl shadow-sm w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]`}
@@ -738,8 +755,34 @@ function AIShapingSection() {
                  
                 </div>
 
-                {/* Image */}
-                <div className="h-28 bg-white/60 rounded-xl mb-4"></div>
+                {/* Video / Image */}
+                {week.video ? (() => {
+                  const embed = getVideoEmbed(week.video);
+                  return embed.type === "iframe" ? (
+                    <iframe
+                      src={embed.src}
+                      allow="autoplay; loop"
+                      className="w-full h-40 rounded-xl mb-4"
+                    />
+                  ) : (
+                    <video
+                      src={embed.src}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-40 object-cover rounded-xl mb-4"
+                    />
+                  );
+                })() : week.image ? (
+                  <img
+                    src={week.image}
+                    alt={week.title}
+                    className="w-full h-40 object-cover rounded-xl mb-4"
+                  />
+                ) : (
+                  <div className="h-40 bg-white/60 rounded-xl mb-4" />
+                )}
 
                 {/* Title */}
                 <h3 className="font-semibold text-gray-900 mb-3 text-sm leading-snug">
