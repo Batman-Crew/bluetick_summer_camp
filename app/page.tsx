@@ -177,7 +177,7 @@ function CombinedSection() {
 
   return (
     <section
-      className="py-12 md:px-15"
+      className="md:py-12 md:px-15"
       style={{
         backgroundImage: `url(${HeroMiddleBg.src})`,
         backgroundSize: 'cover',
@@ -185,7 +185,7 @@ function CombinedSection() {
       }}
     >
       <div className="mx-auto">
-        <div className="rounded-3xl p-6 md:p-10 grid grid-cols-1 w-full  md:grid-cols-2 gap-10 items-center">
+        <div className="rounded-3xl p-6 md:p-10 grid grid-cols-1 w-full  md:grid-cols-2 gap-20 items-center">
 
           {/* LEFT SIDE */}
           <div className="flex flex-col items-center md:max-w-xl md:items-start w-full   gap-6">
@@ -245,9 +245,9 @@ function CombinedSection() {
   })
 
   return (
-    <section id="enrollment" className="bg-white py-16 md:px-30">
+    <section id="enrollment" className="bg-white md:py-16 md:px-30">
       <div className="mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 items-center">
 
           {/* LEFT SIDE */}
         <div className="h-full flex flex-col items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.08)] rounded-3xl min-h-[450px] bg-white order-2 md:order-1">
@@ -273,13 +273,13 @@ function CombinedSection() {
 
               {/* Price */}
               <p className="text-4xl font-bold text-black mb-6">
-                ₹3,999
+                ₹2,999
               </p>
 
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-5 py-2 bg-white rounded-full shadow-sm border">
                 <span className="text-sm text-gray-400 line-through">
-                  ₹4,999
+                  ₹3,999
                 </span>
                 <span className="text-sm text-red-500 font-medium">
                   From 1st April
@@ -371,9 +371,16 @@ function CombinedSection() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   School Name
                 </label>
-                <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] bg-white">
-                  <option>Select School</option>
-                </select>
+                   <input
+                  type="School Name"
+                  placeholder="Enter School Name"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                  value={formData.school}
+                  onChange={(e) =>
+                    setFormData({ ...formData, school: e.target.value })
+                  }
+                />
+              
               </div>
 
               {/* Payment Options */}
@@ -445,7 +452,7 @@ function UpcomingBatchSection() {
   }, [])
 
   return (
-    <section className=" py-20 px-4 md:px-20">
+    <section className="py-6 md:py-16 px-4 md:px-20">
       <div className="md:px-24 mx-auto text-center">
 
         {/* Title */}
@@ -466,28 +473,29 @@ function UpcomingBatchSection() {
           </div>
           <div className="flex items-center gap-2 bg-[#D7CFF0] text-purple-900 px-4 py-2 rounded-lg text-sm">
             <Clock className="w-4 h-4" />
-            2 Days / Week, 2Hrs / day
+             2Hrs / day
           </div>
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:max-w-5xl mx-auto gap-4">
 
           {batches.map((batch, idx) => (
             <div
               key={idx}
-              className={`p-5 rounded-xl text-left ${
+              className={`p-3 rounded-lg text-left [font-family:var(--font-sofia-sans)] ${
                 batch.soldOut
-                  ? "bg-pink-100"
+                  ? "border border-[#E7CFE1]"
                   : "bg-white border border-gray-300"
               }`}
+              style={batch.soldOut ? { background: "linear-gradient(180deg, #FBF8F4 0%, #FAE0F3 100%)" } : undefined}
             >
               {/* Top Row */}
-              <div className="flex justify-between items-center mb-2">
+              <div className={`${batch?.soldOut ? "justify-center" : "justify-between"} flex items-center mb-2`}>
                 <p className="font-semibold text-sm">{batch.date}</p>
 
-                {batch.days && (
-                  <span className="bg-black text-white text-xs px-3 py-1 rounded-full">
+                {batch.days && !batch?.soldOut && (
+                  <span className={` bg-black text-white text-xs px-3 py-1 rounded-full`}>
                     {batch.days}
                   </span>
                 )}
@@ -495,13 +503,16 @@ function UpcomingBatchSection() {
 
               {/* Sold Out */}
               {batch.soldOut && (
+                <div className="flex items-center justify-center">
+
                 <span className="inline-block bg-red-200 text-red-600 text-xs px-3 py-1 rounded-full mt-2">
                   Sold out
                 </span>
+                </div>
               )}
 
               {/* Time */}
-              {batch.time && (
+              {batch.time && !batch?.soldOut && (
                 <ul className="text-xs text-gray-600 mt-3 space-y-1">
                   {batch.time.map((t, i) => (
                     <li key={i}>• {t}</li>
@@ -522,8 +533,8 @@ function UpcomingBatchSection() {
 
 function AIShapingSection() {
   return (
-    <section className="bg-white px-4 md:px-20 py-20 ">
-      <div className="mxw-6xl">
+    <section className="bg-white w-full px-4 md:px-20 py-20 ">
+      <div className="">
         <div className="grid grid-cols-1 items-center gap-6 md:gap-30 md:grid-cols-[2fr_1fr]">
           <div className="relative overflow-hidden rounded-[18px] bg-[#e7e0d7] px-5 py-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)] md:min-h-[250px] md:px-6 md:py-6 order-2 md:order-1">
             <div className="max-w-[72%] md:max-w-[68%]">
@@ -567,7 +578,7 @@ function AIShapingSection() {
               </div>
               <div className="px-6 py-5 text-center text-[15px] text-[#222222]">
                 <span className="font-medium">Enroll Now</span>
-                <span className="ml-2 text-[#a3a3a3] line-through">₹4999</span>
+                <span className="ml-2 text-[#a3a3a3] line-through">₹3999</span>
                 <span className="ml-2 font-semibold text-[#1473ff]">₹2999</span>
               </div>
             </div>
@@ -607,7 +618,7 @@ function AIShapingSection() {
     handsOn: "Building a \"Personal AI Mentor\" for their favorite hobby (Gaming, Cricket, or Space).",
   },
   {
-    week: "Week 2: Session 1",
+    week: "Week 2: Session 3",
     title: "AI Digital Masterpiece – The Modern Day Van Gogh",
     topics: [
       "Understanding styles, lighting, and camera angles.",
@@ -619,7 +630,7 @@ function AIShapingSection() {
     handsOn: "Creating a high-definition Personal AI Avatar in 5 different professional styles.",
   },
   {
-    week: "Week 2: Session 2",
+    week: "Week 2: Session 4",
     title: "Smart Presentations – Slides with AI",
     topics: [
       "Turning 10 pages of notes into 5 powerful slides.",
@@ -631,7 +642,7 @@ function AIShapingSection() {
     handsOn: "Creating a stunning presentation for your business idea or solving an environment problem (like e-waste management).",
   },
   {
-    week: "Week 3: Session 1",
+    week: "Week 3: Session 5",
     title: "AI Soundscapes – The Creative Composer",
     topics: [
       "Composing music and voiceovers using AI (Suno, Udio, or ElevenLabs).",
@@ -643,7 +654,7 @@ function AIShapingSection() {
     handsOn: "Creating an Original Theme Song for their upcoming final project.",
   },
   {
-    week: "Week 3: Session 2",
+    week: "Week 3: Session 6",
     title: "Virtual AI Filmmaking – The Director's Cut",
     topics: [
       "Using AI to generate consistent \"B-roll\" and cinematic shots.",
@@ -655,7 +666,7 @@ function AIShapingSection() {
     handsOn: "Directing a 30-second teaser for a sci-fi movie they've imagined.",
   },
   {
-    week: "Week 4: Session 1",
+    week: "Week 4: Session 7",
     title: "Build an AI Chatbot – Your Personal AI Tutor",
     topics: [
       "How to give an AI a specific personality and knowledge base.",
@@ -667,7 +678,7 @@ function AIShapingSection() {
     handsOn: "Design a chatbot to answer questions on science/math subjects by creating and retrieving memory in AI.",
   },
   {
-    week: "Week 4: Session 2",
+    week: "Week 4: Session 8",
     title: "Critical Thinking in the Age of AI: Presentations & 2030 Vision",
     topics: [
       "How to verify AI answers and spot mistakes. How to use AI ethically & responsibly.",
@@ -702,7 +713,7 @@ function AIShapingSection() {
             <h2 className="text-4xl md:text-5xl mb-3">
               A simple{" "}
               <span className="bg-red-200 px-2 py-1 rounded-md text-xl align-middle font-bold">
-                8 WEEKS
+                4 WEEKS
               </span>
             </h2>
 
@@ -724,9 +735,7 @@ function AIShapingSection() {
                     {week.week}
                   </span>
 
-                  <span className="bg-white/70 text-[10px] px-3 py-1 rounded-full text-gray-600">
-                    2 Sessions
-                  </span>
+                 
                 </div>
 
                 {/* Image */}
@@ -1310,9 +1319,13 @@ function MonthlyUpgradeSectionLast() {
             <img key={idx} src={tool} alt="tool" className="w-10 h-10 object-contain" />
           ))}
         </div>
-
+      </div>
+      <div className="relative z-10 -mx-6">
+        <AIShapingSection />
+      </div>
+      <div className="relative z-10 max-w-7xl mx-auto text-center">
         {/* 🔹 FAQ Title */}
-        <h2 className="text-3xl font-semibold mb-6">FAQ’s</h2>
+        <h2 className="text-3xl mt-5 font-semibold mb-6">FAQ’s</h2>
 
         {/* 🔹 FAQ Accordion */}
         <Accordion type="single" collapsible className="space-y-3">
@@ -1498,7 +1511,6 @@ export default function Home() {
     <main className="bg-white">
       <HeroSection />
       <CombinedSection />
-      <AIShapingSection />
       <LearningJourneySection />
       <EnrollmentSection />
       <UpcomingBatchSection />

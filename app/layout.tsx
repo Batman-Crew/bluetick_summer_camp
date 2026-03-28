@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono, Crimson_Text } from 'next/font/google'
+import { Geist, Geist_Mono, Crimson_Text, Sofia_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import Footer from '@/components/Footer'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const crimsonText = Crimson_Text({ subsets: ["latin"], weight: ["400", "600", "700"], variable: "--font-crimson" });
+export const sofiaSans = Sofia_Sans({ subsets: ["latin"], weight: ["400", "600", "700"], variable: "--font-sofia-sans" });
 
 export const metadata: Metadata = {
   title: 'BlueTick',
@@ -37,8 +39,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased ${crimsonText.variable}`}>
+      <body className={`font-sans antialiased ${crimsonText.variable} ${sofiaSans.variable}`}>
         {children}
+        <Footer />
         <Analytics />
       </body>
     </html>

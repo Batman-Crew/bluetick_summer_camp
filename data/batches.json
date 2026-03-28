@@ -2,7 +2,7 @@
   {
     "id": "1",
     "date": "28th March, 2026",
-    "soldOut": false,
+    "soldOut": true,
     "days": "",
     "time": []
   },
@@ -14,19 +14,10 @@
       "9:00 am - 11:00 am",
       "11:00 am - 01:00 pm"
     ],
-    "soldOut": false
+    "soldOut": true
   },
   {
     "id": "3",
-    "date": "21st April, 2026",
-    "days": "Mon & Wed",
-    "time": [
-      "9:00 am - 11:00 am",
-      "11:00 am - 01:00 pm"
-    ]
-  },
-  {
-    "id": "4",
     "date": "25th April, 2026",
     "days": "Sat & Sun",
     "time": [
@@ -35,19 +26,38 @@
     ]
   },
   {
-    "id": "5",
-    "date": "5th May, 2026",
+    "id": "4",
+    "date": "4th May, 2026",
     "days": "Mon & Wed",
     "time": [
       "9:00 am - 11:00 am",
       "11:00 am - 01:00 pm"
     ]
   },
-  {
-    "id": "1774072279185",
-    "date": "30th jan 2026",
+    {
+    "id": "5",
+    "date": "9th May, 2026",
     "days": "Mon & Wed",
     "time": [
+      "9:00 am - 11:00 am",
+      "11:00 am - 01:00 pm"
+    ]
+  },
+    {
+    "id": "6",
+    "date": "18th May, 2026",
+    "days": "Mon & Wed",
+    "time": [
+      "9:00 am - 11:00 am",
+      "11:00 am - 01:00 pm"
+    ]
+  },
+      {
+    "id": "7",
+    "date": "23rd May, 2026",
+    "days": "Mon & Wed",
+    "time": [
+      "9:00 am - 11:00 am",
       "11:00 am - 01:00 pm"
     ]
   }
