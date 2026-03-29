@@ -1,34 +1,30 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { prisma } from "@/lib/prisma";
 
-const dataPath = path.join(process.cwd(), "data", "batches.json");
+type BatchRow = { id: string; date: string; days: string | null; time: string | null; soldOut: boolean }
 
-function readBatches() {
-  const raw = fs.readFileSync(dataPath, "utf-8");
-  return JSON.parse(raw);
-}
-
-function writeBatches(batches: object[]) {
-  fs.writeFileSync(dataPath, JSON.stringify(batches, null, 2), "utf-8");
+function parseBatch(batch: BatchRow) {
+  return {
+    ...batch,
+    time: batch.time ? JSON.parse(batch.time) : [],
+  }
 }
 
 export async function GET() {
-  const batches = readBatches();
-  return NextResponse.json(batches);
+  const batches = await prisma.batch.findMany()
+  return NextResponse.json(batches.map(parseBatch))
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const batches = readBatches();
-  const newBatch = {
-    id: Date.now().toString(),
-    date: body.date,
-    ...(body.days ? { days: body.days } : {}),
-    ...(body.time?.length ? { time: body.time } : {}),
-    ...(body.soldOut ? { soldOut: true } : {}),
-  };
-  batches.push(newBatch);
-  writeBatches(batches);
-  return NextResponse.json(newBatch, { status: 201 });
+  const body = await req.json()
+  const newBatch = await prisma.batch.create({
+    data: {
+      id: Date.now().toString(),
+      date: body.date,
+      ...(body.days ? { days: body.days } : {}),
+      ...(body.time?.length ? { time: JSON.stringify(body.time) } : {}),
+      ...(body.soldOut ? { soldOut: true } : {}),
+    },
+  })
+  return NextResponse.json(parseBatch(newBatch), { status: 201 })
 }

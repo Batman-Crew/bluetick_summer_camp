@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Crimson_Text, Sofia_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import Footer from '@/components/Footer'
+import ConditionalFooter from '@/components/ConditionalFooter'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -41,8 +42,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased ${crimsonText.variable} ${sofiaSans.variable}`}>
         {children}
-        <Footer />
+        <ConditionalFooter />
         <Analytics />
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   )

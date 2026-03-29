@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { ChevronDown, Plus, X, CheckCircle2, Zap } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import HeroBackGround from '../public/hero_background.png'
@@ -215,6 +216,8 @@ function CombinedSection() {
 
 
   function EnrollmentSection() {
+  const BASE_AMOUNT = 2999
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -222,6 +225,141 @@ function CombinedSection() {
     grade: "",
     school: "",
   })
+  const [paymentOption, setPaymentOption] = useState<"pay-now" | "enquire-later">("pay-now")
+  const [batchName, setBatchName] = useState("")
+  const [showPromo, setShowPromo] = useState(false)
+  const [promoCode, setPromoCode] = useState("")
+  const [promoApplied, setPromoApplied] = useState<{ discount: number; label: string } | null>(null)
+  const [promoError, setPromoError] = useState("")
+  const [promoLoading, setPromoLoading] = useState(false)
+  const [payLoading, setPayLoading] = useState(false)
+  const [enquireSuccess, setEnquireSuccess] = useState(false)
+
+  const [batches, setBatches] = useState<{ id: string; date: string; soldOut?: boolean }[]>([])
+
+  const finalAmount = promoApplied
+    ? Math.round(BASE_AMOUNT * (1 - promoApplied.discount / 100))
+    : BASE_AMOUNT
+
+  useEffect(() => {
+    fetch("/api/batches").then((r) => r.json()).then(setBatches)
+  }, [])
+
+  // Load Razorpay checkout script once
+  useEffect(() => {
+    const script = document.createElement("script")
+    script.src = "https://checkout.razorpay.com/v1/checkout.js"
+    script.async = true
+    document.body.appendChild(script)
+    return () => { document.body.removeChild(script) }
+  }, [])
+
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim()) return
+    setPromoLoading(true)
+    setPromoError("")
+    try {
+      const res = await fetch("/api/validate-promo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promoCode }),
+      })
+      const data = await res.json()
+      if (data.valid) {
+        setPromoApplied({ discount: data.discount, label: data.label })
+        setPromoError("")
+      } else {
+        setPromoApplied(null)
+        setPromoError("Invalid promo code. Please try again.")
+      }
+    } finally {
+      setPromoLoading(false)
+    }
+  }
+
+  const handleProceedToPayment = async () => {
+    if (!formData.name || !formData.phone || !formData.email || !batchName) return
+    setPayLoading(true)
+    try {
+      const res = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          batch: batchName,
+          promoCode: promoApplied ? promoCode : null,
+          amount: BASE_AMOUNT,
+          finalAmount,
+        }),
+      })
+      const { order } = await res.json()
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency,
+        name: "BlueTick AI Summer Camp",
+        description: `Batch: ${batchName}`,
+        order_id: order.id,
+        handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
+          const verifyRes = await fetch("/api/verify-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(response),
+          })
+          const data = await verifyRes.json()
+          if (data.success) {
+            toast.success("Payment Successful! We'll send details to " + formData.email + " shortly.")
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: `+91${formData.phone}`,
+        },
+        notes: {
+          batch: batchName,
+          grade: formData.grade,
+          school: formData.school,
+        },
+        theme: { color: "#2563EB" },
+      }
+
+      const razorpay = new (window as unknown as { Razorpay: new (opts: typeof options) => { open: () => void } }).Razorpay(options)
+      razorpay.open()
+    } finally {
+      setPayLoading(false)
+    }
+  }
+
+  const handleEnquire = async () => {
+    if (!formData.name || !formData.phone || !formData.email) return
+    setPayLoading(true)
+    try {
+      await fetch("/api/enrollments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+      setEnquireSuccess(true)
+    } finally {
+      setPayLoading(false)
+    }
+  }
+
+if (enquireSuccess) {
+    return (
+      <section id="enrollment" className="bg-white md:py-16 md:px-30">
+        <div className="mx-auto flex items-center justify-center min-h-[400px]">
+          <div className="text-center p-10 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] max-w-md">
+            <CheckCircle2 className="w-16 h-16 text-[#2563EB] mx-auto mb-4" />
+            <h3 className="text-2xl font-bold mb-2">Enquiry Submitted!</h3>
+            <p className="text-gray-600">We'll reach out to <strong>{formData.email}</strong> soon with payment details.</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section id="enrollment" className="bg-white md:py-16 md:px-30">
@@ -251,9 +389,17 @@ function CombinedSection() {
               </p>
 
               {/* Price */}
-              <p className="text-4xl font-bold text-black mb-6">
-                ₹2,999
-              </p>
+              <div className="mb-6">
+                {promoApplied ? (
+                  <div className="flex flex-col items-center gap-1">
+                    <p className="text-2xl text-gray-400 line-through">₹{BASE_AMOUNT.toLocaleString()}</p>
+                    <p className="text-4xl font-bold text-green-600">₹{finalAmount.toLocaleString()}</p>
+                    <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">{promoApplied.label} applied</span>
+                  </div>
+                ) : (
+                  <p className="text-4xl font-bold text-black">₹{BASE_AMOUNT.toLocaleString()}</p>
+                )}
+              </div>
 
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-5 py-2 bg-white rounded-full shadow-sm border">
@@ -276,7 +422,7 @@ function CombinedSection() {
               It takes less than 60 seconds
             </p>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
 
               {/* Name */}
               <div>
@@ -336,8 +482,12 @@ function CombinedSection() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Grade
                 </label>
-                <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] bg-white">
-                  <option>Select Grade</option>
+                <select
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] bg-white"
+                  value={formData.grade}
+                  onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
+                >
+                  <option value="">Select Grade</option>
                   <option>Grade 6</option>
                   <option>Grade 7</option>
                   <option>Grade 8</option>
@@ -350,8 +500,8 @@ function CombinedSection() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   School Name
                 </label>
-                   <input
-                  type="School Name"
+                <input
+                  type="text"
                   placeholder="Enter School Name"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
                   value={formData.school}
@@ -359,47 +509,141 @@ function CombinedSection() {
                     setFormData({ ...formData, school: e.target.value })
                   }
                 />
-              
               </div>
 
               {/* Payment Options */}
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="payment" defaultChecked />
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentOption === "pay-now"}
+                    onChange={() => setPaymentOption("pay-now")}
+                  />
                   <span className="text-sm">Pay Now</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="payment" />
+                  <input
+                    type="radio"
+                    name="payment"
+                    checked={paymentOption === "enquire-later"}
+                    onChange={() => setPaymentOption("enquire-later")}
+                  />
                   <span className="text-sm">Enquire Now, Pay Later</span>
                 </label>
               </div>
 
+              {/* Batch selection — only shown when Pay Now is selected */}
+              {paymentOption === "pay-now" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Batch
+                  </label>
+                  <select
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] bg-white"
+                    value={batchName}
+                    onChange={(e) => setBatchName(e.target.value)}
+                  >
+                    <option value="">Select a Batch</option>
+                    {batches
+                      .filter((b) => !b.soldOut)
+                      .map((b) => (
+                        <option key={b.id} value={b.date}>
+                          {b.date}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
+
               {/* Promo */}
-              <div className="flex items-center gap-2">
-                <input type="checkbox" id="promo" className="rounded" />
-                <label htmlFor="promo" className="text-sm text-gray-600">
-                  Have a Promo code?
-                </label>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="promo"
+                    className="rounded"
+                    checked={showPromo}
+                    onChange={(e) => {
+                      setShowPromo(e.target.checked)
+                      if (!e.target.checked) {
+                        setPromoCode("")
+                        setPromoApplied(null)
+                        setPromoError("")
+                      }
+                    }}
+                  />
+                  <label htmlFor="promo" className="text-sm text-gray-600 cursor-pointer">
+                    Have a Promo code?
+                  </label>
+                </div>
+
+                {showPromo && (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Enter promo code"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] text-sm uppercase"
+                      value={promoCode}
+                      onChange={(e) => {
+                        setPromoCode(e.target.value)
+                        setPromoApplied(null)
+                        setPromoError("")
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="px-4 py-2 text-sm border-[#2563EB] text-[#2563EB] hover:bg-[#EAF3FF]"
+                      onClick={handleApplyPromo}
+                      disabled={promoLoading || !promoCode.trim()}
+                    >
+                      {promoLoading ? "..." : "Apply"}
+                    </Button>
+                  </div>
+                )}
+
+                {promoApplied && (
+                  <p className="text-xs text-green-600 font-medium">
+                    Promo applied: {promoApplied.label} — You save ₹{(BASE_AMOUNT - finalAmount).toLocaleString()}
+                  </p>
+                )}
+                {promoError && (
+                  <p className="text-xs text-red-500">{promoError}</p>
+                )}
               </div>
 
               {/* Button */}
-              <Button className="w-full bg-[#2563EB] text-white py-3 rounded-full text-lg hover:bg-[#1d4ed8] flex items-center justify-center gap-2">
-                Enroll Now <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5 12h14m-6-6l6 6-6 6"
-              />
-            </svg>
-              </Button>
+              {paymentOption === "pay-now" ? (
+                <Button
+                  type="button"
+                  className="w-full bg-[#2563EB] text-white py-3 rounded-full text-lg hover:bg-[#1d4ed8] flex items-center justify-center gap-2 disabled:opacity-60"
+                  onClick={handleProceedToPayment}
+                  disabled={payLoading || !batchName || !formData.name || !formData.phone || !formData.email}
+                >
+                  {payLoading ? "Processing..." : `Proceed to Payment — ₹${finalAmount.toLocaleString()}`}
+                  {!payLoading && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6l6 6-6 6" />
+                    </svg>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  className="w-full bg-[#2563EB] text-white py-3 rounded-full text-lg hover:bg-[#1d4ed8] flex items-center justify-center gap-2 disabled:opacity-60"
+                  onClick={handleEnquire}
+                  disabled={payLoading || !formData.name || !formData.phone || !formData.email}
+                >
+                  {payLoading ? "Submitting..." : "Enroll Now"}
+                  {!payLoading && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6l6 6-6 6" />
+                    </svg>
+                  )}
+                </Button>
+              )}
             </form>
           </div>
 

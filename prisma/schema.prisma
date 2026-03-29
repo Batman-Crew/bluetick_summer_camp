@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model PromoCode {
+  id          Int          @id @default(autoincrement())
+  code        String       @unique
+  discount    Int
+  label       String
+  active      Boolean      @default(true)
+  usageCount  Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  enrollments Enrollment[]
+}
+
+model Batch {
+  id      String  @id
+  date    String
+  days    String?
+  time    String? // JSON-encoded string[]
+  soldOut Boolean @default(false)
+}
+
+model Enrollment {
+  id                String   @id @default(cuid())
+  name              String
+  phone             String
+  email             String
+  grade             String
+  school            String
+  batch             String
+  paymentOption     String
+  amount            Int?
+  discountAmount    Int?
+  finalAmount       Int?
+  razorpayOrderId   String?  @unique
+  razorpayPaymentId String?  @unique
+  paymentStatus     String   @default("pending")
+  promoCodeId       Int?
+  promoCode         PromoCode? @relation(fields: [promoCodeId], references: [id])
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
