@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { ChevronDown, Plus, X, CheckCircle2, Zap } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import HeroBackGround from '../public/hero_background.png'
 import Rebot from '../public/robot_hero.png'
@@ -22,7 +21,7 @@ import { CalendarDays, Clock } from "lucide-react"
 function HeroSection() {
   return (
     <section
-      className="relative min-h-screen overflow-hidden font-sans"
+      className="relative md:min-h-screen overflow-hidden font-sans"
       style={{
         backgroundImage: `url(${HeroBackGround.src})`,
         backgroundSize: 'cover',
@@ -42,26 +41,6 @@ function HeroSection() {
         </div>
       </div>
 
-      {/* Navbar */}
-      <nav className="relative z-20 flex items-center justify-between px-5 md:px-16 py-4">
-        <div className="flex items-center gap-2">
-          {/* BlueTick logo */}
-          <img src="/logo 1.png" alt="BlueTick Logo" className="h-10 md:h-12 w-auto" />
-        </div>
-
-        <div className="flex items-center gap-3">
-          <a href="https://wa.me" className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center shadow-md hover:scale-105 transition-transform">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-          </a>
-          <a href="tel:" className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md hover:scale-105 transition-transform border border-gray-100">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.64A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
-            </svg>
-          </a>
-        </div>
-      </nav>
 
       {/* Hero content */}
       <div className="relative z-10 flex flex-col items-center text-center px-4 pt-4 pb-0 md:pb-12 min-h-[600px] md:min-h-[680px]">
@@ -539,7 +518,7 @@ function AIShapingSection() {
           <div className="relative overflow-hidden rounded-[18px] bg-[#e7e0d7] px-5 py-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)] md:min-h-[250px] md:px-6 md:py-6 order-2 md:order-1">
             <div className="max-w-[72%] md:max-w-[68%]">
               <h3 className="mb-4 text-2xl font-semibold leading-tight text-[#161616] md:text-[25px]">
-                AI is shaping the Future <span className="font-normal">let your child be ready</span>
+                AI is shaping the Future. <span className="font-normal">Let your child be ready</span>
               </h3>
               <p className="mb-6 text-sm leading-6 text-[#5f5a55] md:text-[15px]">
                 Artificial Intelligence is transforming industries around the world. Learning AI early helps children develop:
@@ -576,7 +555,10 @@ function AIShapingSection() {
               <div className="rounded-[18px] rounded-b-[14px] bg-[#cfc4f3] px-6 py-5 text-center shadow-[0_4px_0_rgba(0,0,0,0.10)]">
                 <span className="text-base font-semibold text-[#4c34a4]">10% Early bird till 15th March</span>
               </div>
-              <div className="px-6 py-5 text-center text-[15px] text-[#222222]">
+              <div
+                className="px-6 py-5 text-center text-[15px] text-[#222222] cursor-pointer"
+                onClick={() => document.getElementById("enrollment")?.scrollIntoView({ behavior: "smooth" })}
+              >
                 <span className="font-medium">Enroll Now</span>
                 <span className="ml-2 text-[#a3a3a3] line-through">₹3999</span>
                 <span className="ml-2 font-semibold text-[#1473ff]">₹2999</span>
@@ -710,7 +692,7 @@ function LearningJourneySection() {
 ]
 
   return (
-    <section id="learning-journey" className="bg-[#F7F7FB] py-20 px-4 md:px-20 relative overflow-hidden">
+    <section id="learning-journey" className="bg-[#F7F7FB] py-2 md:py-20 px-4 md:px-20 relative overflow-hidden">
       <div className="mx-auto">
 
           {/* Header */}
@@ -849,7 +831,7 @@ function MonthlyUpgradeSection() {
       <div className="mx-auto">
 
         {/* CONTENT CONTAINER */}
-        <div className="p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className=" md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
 
           {/* LEFT CONTENT */}
           <div className="text-center md:text-left max-w-xl">
@@ -1317,7 +1299,7 @@ function MonthlyUpgradeSectionLast() {
         </h2>
 
         {/* 🔹 Skills Accordion */}
-        <Accordion type="single" collapsible className="space-y-3 mb-16">
+        <Accordion type="single" defaultValue="item-0" collapsible className="space-y-3 mb-16">
           {faqs.map((faq, idx) => (
             <AccordionItem
               key={idx}
@@ -1327,7 +1309,7 @@ function MonthlyUpgradeSectionLast() {
               <AccordionTrigger className="text-left font-medium text-sm hover:no-underline">
                 {faq.title}
               </AccordionTrigger>
-              <AccordionContent className="text-gray-500 text-sm pb-2">
+              <AccordionContent className="text-gray-500 text-left text-sm pb-2">
                 {faq.description}
               </AccordionContent>
             </AccordionItem>
@@ -1381,7 +1363,7 @@ function MonthlyUpgradeSectionLast() {
               <AccordionTrigger className="text-left font-medium text-sm hover:no-underline">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-gray-500 text-sm pb-2">
+              <AccordionContent className="text-gray-500 text-sm text-left pb-2">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>
@@ -1584,9 +1566,54 @@ function TestimonialsSection() {
   )
 }
 
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY >= 90)
+    window.addEventListener("scroll", onScroll)
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  return (
+    <nav
+      className={`sticky top-0 z-50 flex items-center justify-between transition-all duration-300
+        md:px-16 md:py-4 md:bg-white md:shadow-sm
+        ${scrolled
+          ? "max-[768px]:top-3 max-[768px]:mx-4 max-[768px]:rounded-full max-[768px]:px-5 max-[768px]:py-3 max-[768px]:bg-white/20 max-[768px]:backdrop-blur-lg max-[768px]:border max-[768px]:border-white/30 max-[768px]:shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
+          : "max-[768px]:px-5 max-[768px]:py-4 max-[768px]:bg-transparent"
+      }`}
+    >
+      <div className="flex items-center gap-2">
+        <img src="/logo 1.png" alt="BlueTick Logo" className="h-8 md:h-10 w-auto" />
+      </div>
+
+      <div className="flex items-center gap-3">
+        <button
+          className="hidden md:flex bg-[#0d0d2b] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#1a1a4e] transition-colors"
+          onClick={() => document.getElementById("enrollment")?.scrollIntoView({ behavior: "smooth" })}
+        >
+          Enroll Now
+        </button>
+        <a
+          href="https://wa.me/919606333830"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center shadow-md hover:scale-105 transition-transform"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+        </a>
+      </div>
+    </nav>
+  )
+}
+
 export default function Home() {
   return (
     <main className="bg-white">
+      <Navbar />
       <HeroSection />
       <CombinedSection />
       <LearningJourneySection />
