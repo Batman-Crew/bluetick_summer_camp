@@ -5,6 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const { name, phone, email, grade, school } = await req.json()
 
+    // Create enrollment and lead together
     const enrollment = await prisma.enrollment.create({
       data: {
         name,
@@ -15,6 +16,17 @@ export async function POST(req: NextRequest) {
         batch: '',
         paymentOption: 'enquire-later',
         paymentStatus: 'enquiry',
+        lead: {
+          create: {
+            name,
+            phone,
+            email,
+            grade: grade || null,
+            school: school || null,
+            paymentStatus: 'unpaid',
+            leadStatus: 'new',
+          }
+        }
       },
     })
 

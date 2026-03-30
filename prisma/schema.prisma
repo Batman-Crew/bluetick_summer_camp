@@ -56,4 +56,21 @@ model Enrollment {
   promoCode         PromoCode? @relation(fields: [promoCodeId], references: [id])
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+  lead              Lead?
+}
+
+model Lead {
+  id             String   @id @default(cuid())
+  name           String
+  phone          String
+  email          String
+  grade          String?
+  school         String?
+  batch          String?
+  paymentStatus  String   @default("unpaid") // "unpaid" or "paid"
+  leadStatus     String   @default("new") // "new", "contacted", "qualified", "converted", "lost"
+  enrollmentId   String?  @unique
+  enrollment     Enrollment? @relation(fields: [enrollmentId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

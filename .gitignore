@@ -9,6 +9,7 @@ __v0_jsx-dev-runtime.ts
 next.user-config.*
 
 # Environment variables
+.env
 .env*.local
 
 # Common ignores
@@ -17,3 +18,5 @@ node_modules/
 .DS_Store
 /lib/generated/prisma
 package-lock.json
+*.db
+dev.db

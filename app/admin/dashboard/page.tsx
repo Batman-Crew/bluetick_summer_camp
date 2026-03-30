@@ -123,8 +123,8 @@ export default function AdminDashboard() {
         const style = STATUS_STYLES[p.value] ?? { bg: '#f3f4f6', text: '#6b7280', dot: '#9ca3af' }
         return (
           <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold capitalize"
-            style={{ background: style.bg, color: style.text }}
+            className="inline-flex items-center gap-1.5 px-2.5 h-5 py-1 rounded-full text-[11px] font-semibold capitalize"
+            style={{ color: style.text }}
           >
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: style.dot }} />
             {p.value}

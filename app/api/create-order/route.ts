@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       receipt: `receipt_${Date.now()}`,
     })
 
-    // Save enrollment to DB
+    // Save enrollment to DB and create lead
     const enrollment = await prisma.enrollment.create({
       data: {
         name,
@@ -42,6 +42,18 @@ export async function POST(req: NextRequest) {
         razorpayOrderId: order.id,
         paymentStatus: 'pending',
         promoCodeId: promoCodeRecord?.id ?? null,
+        lead: {
+          create: {
+            name,
+            phone,
+            email,
+            grade,
+            school,
+            batch,
+            paymentStatus: 'unpaid',
+            leadStatus: 'new',
+          }
+        }
       },
     })
 

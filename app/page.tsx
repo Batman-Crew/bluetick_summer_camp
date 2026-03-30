@@ -390,15 +390,7 @@ if (enquireSuccess) {
 
               {/* Price */}
               <div className="mb-6">
-                {promoApplied ? (
-                  <div className="flex flex-col items-center gap-1">
-                    <p className="text-2xl text-gray-400 line-through">₹{BASE_AMOUNT.toLocaleString()}</p>
-                    <p className="text-4xl font-bold text-green-600">₹{finalAmount.toLocaleString()}</p>
-                    <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">{promoApplied.label} applied</span>
-                  </div>
-                ) : (
-                  <p className="text-4xl font-bold text-black">₹{BASE_AMOUNT.toLocaleString()}</p>
-                )}
+                <p className="text-4xl font-bold text-black">₹{BASE_AMOUNT.toLocaleString()}</p>
               </div>
 
               {/* Badge */}
@@ -557,62 +549,64 @@ if (enquireSuccess) {
                 </div>
               )}
 
-              {/* Promo */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="promo"
-                    className="rounded"
-                    checked={showPromo}
-                    onChange={(e) => {
-                      setShowPromo(e.target.checked)
-                      if (!e.target.checked) {
-                        setPromoCode("")
-                        setPromoApplied(null)
-                        setPromoError("")
-                      }
-                    }}
-                  />
-                  <label htmlFor="promo" className="text-sm text-gray-600 cursor-pointer">
-                    Have a Promo code?
-                  </label>
-                </div>
-
-                {showPromo && (
-                  <div className="flex gap-2">
+              {/* Promo - only shown for Pay Now */}
+              {paymentOption === "pay-now" && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
                     <input
-                      type="text"
-                      placeholder="Enter promo code"
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] text-sm uppercase"
-                      value={promoCode}
+                      type="checkbox"
+                      id="promo"
+                      className="rounded"
+                      checked={showPromo}
                       onChange={(e) => {
-                        setPromoCode(e.target.value)
-                        setPromoApplied(null)
-                        setPromoError("")
+                        setShowPromo(e.target.checked)
+                        if (!e.target.checked) {
+                          setPromoCode("")
+                          setPromoApplied(null)
+                          setPromoError("")
+                        }
                       }}
                     />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="px-4 py-2 text-sm border-[#2563EB] text-[#2563EB] hover:bg-[#EAF3FF]"
-                      onClick={handleApplyPromo}
-                      disabled={promoLoading || !promoCode.trim()}
-                    >
-                      {promoLoading ? "..." : "Apply"}
-                    </Button>
+                    <label htmlFor="promo" className="text-sm text-gray-600 cursor-pointer">
+                      Have a Promo code?
+                    </label>
                   </div>
-                )}
 
-                {promoApplied && (
-                  <p className="text-xs text-green-600 font-medium">
-                    Promo applied: {promoApplied.label} — You save ₹{(BASE_AMOUNT - finalAmount).toLocaleString()}
-                  </p>
-                )}
-                {promoError && (
-                  <p className="text-xs text-red-500">{promoError}</p>
-                )}
-              </div>
+                  {showPromo && (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Enter promo code"
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] text-sm uppercase"
+                        value={promoCode}
+                        onChange={(e) => {
+                          setPromoCode(e.target.value)
+                          setPromoApplied(null)
+                          setPromoError("")
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="px-4 py-2 text-sm border-[#2563EB] text-[#2563EB] hover:bg-[#EAF3FF]"
+                        onClick={handleApplyPromo}
+                        disabled={promoLoading || !promoCode.trim()}
+                      >
+                        {promoLoading ? "..." : "Apply"}
+                      </Button>
+                    </div>
+                  )}
+
+                  {promoApplied && (
+                    <p className="text-xs text-green-600 font-medium">
+                      Promo applied: {promoApplied.label} — You save ₹{(BASE_AMOUNT - finalAmount).toLocaleString()}
+                    </p>
+                  )}
+                  {promoError && (
+                    <p className="text-xs text-red-500">{promoError}</p>
+                  )}
+                </div>
+              )}
 
               {/* Button */}
               {paymentOption === "pay-now" ? (

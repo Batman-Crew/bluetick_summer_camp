@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Update enrollment status and payment ID
-    await prisma.enrollment.update({
+    const enrollment = await prisma.enrollment.update({
       where: { razorpayOrderId: razorpay_order_id },
       data: {
         paymentStatus: 'paid',
@@ -25,10 +25,18 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    // Update lead payment status to paid
+    if (enrollment.id) {
+      await prisma.lead.updateMany({
+        where: { enrollmentId: enrollment.id },
+        data: {
+          paymentStatus: 'paid',
+          leadStatus: 'converted'
+        },
+      })
+    }
+
     // Increment promo code usage if applicable
-    const enrollment = await prisma.enrollment.findUnique({
-      where: { razorpayOrderId: razorpay_order_id },
-    })
     if (enrollment?.promoCodeId) {
       await prisma.promoCode.update({
         where: { id: enrollment.promoCodeId },
