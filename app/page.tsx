@@ -66,7 +66,7 @@ function HeroSection() {
        
 
         {/* CTAs */}
-        <div className="flex flex-nowrap gap-3 justify-center py-6 md:mb-12 w-full px-4">
+        <div className="flex hidden md:flex flex-nowrap gap-3 justify-center py-6 md:mb-12 w-full px-4">
           <button
             className="bg-[#0d0d2b] text-white px-5 md:px-8 py-3.5 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-[#1a1a4e] transition-colors shadow-lg whitespace-nowrap"
             onClick={() => document.getElementById("learning-journey")?.scrollIntoView({ behavior: "smooth" })}
@@ -115,6 +115,23 @@ function HeroSection() {
         </div>
         <div className="hidden md:block absolute right-[5%] top-[68%] w-40 animate-float-slow drop-shadow-xl pointer-events-none">
           <img src={HeroLogoThree.src} alt="Medal" className="w-full object-contain" />
+        </div>
+         <div className="flex md:hidden flex-nowrap gap-3 justify-center py-6 md:mb-12 w-full px-4">
+          <button
+            className="bg-[#0d0d2b] text-white px-5 md:px-8 py-3.5 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-[#1a1a4e] transition-colors shadow-lg whitespace-nowrap"
+            onClick={() => document.getElementById("learning-journey")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            Explore Learning Plan
+          </button>
+          <button
+            className="bg-[#3b82f6] text-white px-5 md:px-8 py-3.5 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-[#2563eb] transition-all shadow-lg flex items-center gap-2 whitespace-nowrap"
+            onClick={() => document.getElementById("enrollment")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            Enroll Now
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6l6 6-6 6" />
+            </svg>
+          </button>
         </div>
       </div>
 
