@@ -346,6 +346,13 @@ function CombinedSection() {
       razorpay.open()
     } finally {
       setPayLoading(false)
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        grade: "",
+        school: "",
+      })
     }
   }
 
@@ -361,7 +368,14 @@ function CombinedSection() {
       setEnquireSuccess(true)
     } finally {
       setPayLoading(false)
-    }
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        grade: "",
+        school: "",
+      })
+      }
   }
 
 if (enquireSuccess) {
