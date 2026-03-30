@@ -1508,14 +1508,18 @@ function MonthlyUpgradeSectionLast() {
 
   // 🔹 Tool Logos
   const tools = [
-    "/image 134.png",
-    "/Logo (1).png",
-    "/Logo (2).png",
-    "/Logo.png",
-    "/image 134.png",
-    "/Logo (1).png",
-    "/Logo (2).png",
-    "/Logo.png",
+    "/AI_STACKS/gpt.png",
+    "/AI_STACKS/gemini.png",
+    "/AI_STACKS/leonardo.png",
+    "/AI_STACKS/Canva_logo.svg.webp",
+    "/AI_STACKS/suno.png",
+    "/AI_STACKS/Runway_Logo.png",
+    "/AI_STACKS/Luma-AI-scaled.webp",
+    "/AI_STACKS/Yoodli logo.png",
+    "/AI_STACKS/Logo.png",
+    "/AI_STACKS/Logo (1).png",
+    "/AI_STACKS/mizou.svg",
+    "/AI_STACKS/acme_inc.svg",
   ]
 
   return (
@@ -1579,7 +1583,7 @@ function MonthlyUpgradeSectionLast() {
         {/* Desktop: static centered row */}
         <div className="hidden md:flex flex-wrap justify-center gap-8 mb-16">
           {tools.map((tool, idx) => (
-            <img key={idx} src={tool} alt="tool" className="w-10 h-10 object-contain" />
+            <img key={idx} src={tool} alt="tool" className="w-15 h-15 object-contain" />
           ))}
         </div>
       </div>
@@ -1679,19 +1683,19 @@ function TestimonialsSection() {
       name: "Aadhya Shyam",
       role: "7th Grade, IGCSE",
       text: "I liked making the chatbot myself, I'm now in 7th grade. It was fun and I showed it to my friends also. I thank Harsh sir for this.",
-      image: "",
+      image: "/testimonial_images/Aadhya Shyam.png",
     },
     {
       name: "Aviyukt",
       role: "8th Grade, CBSE",
       text: "Mentors are very supportive, it was fun learning so many things in AI.. I created my AI buddy to teach me subjects which I don't know..",
-      image: "",
+      image: "/testimonial_images/Aviyukt.png",
     },
     {
       name: "Aisha Kashyap",
       role: "Parent",
       text: "I am very relieved my daughter is spending so much time out of social media and doing something productive for her future careers.",
-      image: "",
+      image: "/testimonial_images/Aisha Kashyap.png",
     },
     {
       name: "Krithin Keerthi",
@@ -1739,7 +1743,7 @@ function TestimonialsSection() {
       name: "Armaan Goel",
       role: "Parent",
       text: "I feel this is a must starting point for children in AI. They are not overloading them with too much information. Everything is explained in a simple way. My child was able to follow and also try things independently.",
-      image: "",
+      image: "/testimonial_images/Armaan Goel.png",
     },
     {
       name: "Pranav Sridhar",
