@@ -71,7 +71,7 @@ function HeroSection() {
             className="bg-[#0d0d2b] text-white px-5 md:px-8 py-3.5 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-[#1a1a4e] transition-colors shadow-lg whitespace-nowrap"
             onClick={() => document.getElementById("learning-journey")?.scrollIntoView({ behavior: "smooth" })}
           >
-            Explore Learning Plan
+            Live Online Classes
           </button>
           <button
             className="bg-[#3b82f6] text-white px-5 md:px-8 py-3.5 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-[#2563eb] transition-all shadow-lg flex items-center gap-2 whitespace-nowrap"
@@ -121,7 +121,7 @@ function HeroSection() {
             className="bg-[#0d0d2b] text-white px-5 md:px-8 py-3.5 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-[#1a1a4e] transition-colors shadow-lg whitespace-nowrap"
             onClick={() => document.getElementById("learning-journey")?.scrollIntoView({ behavior: "smooth" })}
           >
-            Explore Learning Plan
+            Live Online Classes
           </button>
           <button
             className="bg-[#3b82f6] text-white px-5 md:px-8 py-3.5 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-[#2563eb] transition-all shadow-lg flex items-center gap-2 whitespace-nowrap"
@@ -252,7 +252,8 @@ function CombinedSection() {
   const [payLoading, setPayLoading] = useState(false)
   const [enquireSuccess, setEnquireSuccess] = useState(false)
 
-  const [batches, setBatches] = useState<{ id: string; date: string; soldOut?: boolean }[]>([])
+  const [batches, setBatches] = useState<{ id: string; date: string; days?: string; soldOut?: boolean }[]>([])
+  const [batchDropdownOpen, setBatchDropdownOpen] = useState(false)
 
   const finalAmount = promoApplied
     ? Math.round(BASE_AMOUNT * (1 - promoApplied.discount / 100))
@@ -563,20 +564,51 @@ if (enquireSuccess) {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Select Batch
                   </label>
-                  <select
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] bg-white"
-                    value={batchName}
-                    onChange={(e) => setBatchName(e.target.value)}
-                  >
-                    <option value="">Select a Batch</option>
-                    {batches
-                      .filter((b) => !b.soldOut)
-                      .map((b) => (
-                        <option key={b.id} value={b.date}>
-                          {b.date}
-                        </option>
-                      ))}
-                  </select>
+                  {/* Custom batch dropdown for superscript ordinal rendering */}
+                  <div className="relative">
+                    <button
+                      type="button"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] bg-white text-left flex items-center justify-between"
+                      onClick={() => setBatchDropdownOpen((o) => !o)}
+                    >
+                      <span className={batchName ? "text-gray-900" : "text-gray-400"}>
+                        {batchName
+                          ? (() => {
+                              const b = batches.find((x) => x.date === batchName)
+                              if (!b) return batchName
+                              const m = b.date.match(/^(\d+)(st|nd|rd|th)\s+(\w+)/)
+                              if (!m) return b.date
+                              return (
+                                <span>
+                                  {m[1]}<sup className="text-[0.6em] font-medium">{m[2]}</sup> {m[3]}{b.days ? ` - ${b.days}` : ""}
+                                </span>
+                              )
+                            })()
+                          : "Select a Batch"}
+                      </span>
+                      <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${batchDropdownOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {batchDropdownOpen && (
+                      <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
+                        {batches.filter((b) => !b.soldOut).map((b) => {
+                          const m = b.date.match(/^(\d+)(st|nd|rd|th)\s+(\w+)/)
+                          return (
+                            <li
+                              key={b.id}
+                              className={`px-4 py-3 cursor-pointer hover:bg-blue-50 ${batchName === b.date ? "bg-blue-50 font-medium" : ""}`}
+                              onClick={() => { setBatchName(b.date); setBatchDropdownOpen(false) }}
+                            >
+                              {m ? (
+                                <span>
+                                  {m[1]}<sup className="text-[0.6em] font-medium">{m[2]}</sup> {m[3]}{b.days ? ` - ${b.days}` : ""}
+                                </span>
+                              ) : b.date}
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -1690,7 +1722,7 @@ function TestimonialsSection() {
       name: "Vikram.M",
       role: "Parent",
       text: "I felt AI is too early for my daughter who is only 11 years now.. But after 2 classes, she started explaining things to me. The way they teach to the kids are fantastic.",
-      image: "",
+      image: "/testimonial_images/Vikram M.png",
     },
     {
       name: "Viya Vivek",
@@ -1762,13 +1794,13 @@ function TestimonialsSection() {
       name: "Priyanka Ghosh",
       role: "Parent",
       text: "My son started exploring AI tools on his own after the class. That was nice to see. Good experience.",
-      image: "",
+      image: "/testimonial_images/Priyanka Ghosh.png",
     },
     {
       name: "Dhiyan",
       role: "9th Grade, CBSE",
       text: "At first I thought AI means coding and technical and it will be difficult, but it was not at all difficult. I really enjoyed. I liked the competition in the end.",
-      image: "",
+      image: "/testimonial_images/Dhiyan.png",
     },
     {
       name: "Armaan Goel",
