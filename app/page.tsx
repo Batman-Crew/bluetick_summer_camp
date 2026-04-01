@@ -174,7 +174,7 @@ function CombinedSection() {
 
   return (
     <section
-      className="md:py-12 md:px-15"
+      className="py-10 md:py-16 md:px-15"
       style={{
         backgroundImage: `url(${HeroMiddleBg.src})`,
         backgroundSize: 'cover',
@@ -381,7 +381,7 @@ function CombinedSection() {
 
 if (enquireSuccess) {
     return (
-      <section id="enrollment" className="bg-white md:py-16 md:px-30">
+      <section id="enrollment" className="bg-white py-14 md:py-20 md:px-30">
         <div className="mx-auto flex items-center justify-center min-h-[400px]">
           <div className="text-center p-10 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] max-w-md">
             <CheckCircle2 className="w-16 h-16 text-[#2563EB] mx-auto mb-4" />
@@ -394,7 +394,7 @@ if (enquireSuccess) {
   }
 
   return (
-    <section id="enrollment" className="bg-white md:py-16 md:px-30">
+    <section id="enrollment" className="bg-white py-14 md:py-20 md:px-30">
       <div className="mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 items-center">
 
@@ -732,7 +732,7 @@ function UpcomingBatchSection() {
   }, [])
 
   return (
-    <section className="py-6 md:py-16 px-4 md:px-20">
+    <section className="py-14 md:py-20 px-4 md:px-20">
       <div className="md:px-24 mx-auto text-center">
 
         {/* Title */}
@@ -993,7 +993,7 @@ function LearningJourneySection() {
 ]
 
   return (
-    <section id="learning-journey" className="bg-[#F7F7FB] py-2 md:py-20 px-4 md:px-20 relative overflow-hidden">
+    <section id="learning-journey" className="bg-[#F7F7FB] py-20 md:py-24 px-4 md:px-20 relative overflow-hidden">
       <div className="mx-auto">
 
           {/* Header */}
@@ -1124,7 +1124,7 @@ function LearningJourneySection() {
 function MonthlyUpgradeSection() {
   return (
     <section
-      className="px-4 py-16 bg-cover bg-center"
+      className="px-4 py-20 bg-cover bg-center"
       style={{
         backgroundImage: "url('/Rectangle 560 (1).png')",
       }}
@@ -1401,7 +1401,7 @@ function MonthlyUpgradeSection() {
 //   ]
 
 //   return (
-//     <section className="relative py-16 px-6 overflow-hidden">
+//     <section className="relative py-20 px-6 overflow-hidden">
 
 //       {/* 🔵 Background Gradient */}
 //       <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#6D7DFF] via-[#8FA2FF] to-[#D6DCFF]" />
@@ -1586,7 +1586,7 @@ function MonthlyUpgradeSectionLast() {
   ]
 
   return (
-    <section className="relative py-16 px-6 overflow-hidden">
+    <section className="relative py-20 px-6 overflow-hidden">
       {/* 🔵 Background Gradient */}
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#6D7DFF] via-[#8FA2FF] to-[#D6DCFF]" />
 
@@ -1653,7 +1653,7 @@ function MonthlyUpgradeSectionLast() {
       <div className="relative z-10 -mx-6">
         <AIShapingSection />
       </div>
-      <div className="relative z-10 max-w-7xl mx-auto text-center">
+      <div className="relative z-10 py-4 max-w-7xl mx-auto text-center">
         {/* 🔹 FAQ Title */}
         <h2 className="text-3xl mt-5 font-semibold mb-6">FAQ’s</h2>
 
@@ -1819,7 +1819,7 @@ function TestimonialsSection() {
   const doubled = [...testimonials, ...testimonials]
 
   return (
-    <section className="py-16 bg-white overflow-hidden">
+    <section className="py-20 bg-white overflow-hidden">
       <h2 className="text-3xl font-semibold text-center text-black mb-10">
         What Parents & Students Say
       </h2>
