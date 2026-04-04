@@ -33,16 +33,6 @@ function HeroSection() {
       {/* Grid overlay */}
    
 
-      {/* Top marquee banner */}
-      <div className="relative z-20 bg-[#2d1b6b] text-white text-xs py-2 overflow-hidden whitespace-nowrap">
-        <div className="animate-marquee inline-block">
-          {Array(4).fill("🚀 Early Bird Registration Now Open! &nbsp;•&nbsp; Limited Seats Available &nbsp;•&nbsp; Secure Your Spot Today &nbsp;•&nbsp; Turn Screen Time Into Skill Time &nbsp;•&nbsp; Build Real AI Projects &nbsp;•&nbsp; The Ultimate AI Summer Camp for Grades 6–9 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").map((text, i) => (
-            <span key={i} dangerouslySetInnerHTML={{ __html: text }} />
-          ))}
-        </div>
-      </div>
-
-
       {/* Hero content */}
       <div className="relative z-10 flex flex-col items-center text-center px-4 pt-4 pb-0 md:pb-12 min-h-[600px] md:min-h-[680px]">
 
@@ -925,6 +915,7 @@ function LearningJourneySection() {
   },
   {
     week: "Week 2: Session 4",
+
     title: "Smart Presentations – Slides with AI",
     topics: [
       "Turning 10 pages of notes into 5 powerful slides.",
@@ -1918,6 +1909,14 @@ function Navbar() {
 export default function Home() {
   return (
     <main className="bg-white">
+      {/* Auto-scrolling update banner */}
+      <div className="bg-[#2d1b6b] text-white text-xs py-2 overflow-hidden whitespace-nowrap">
+        <div className="animate-marquee inline-block">
+          {Array(4).fill("🚀 Early Bird Registration Now Open! &nbsp;•&nbsp; Limited Seats Available &nbsp;•&nbsp; Secure Your Spot Today &nbsp;•&nbsp; Turn Screen Time Into Skill Time &nbsp;•&nbsp; Build Real AI Projects &nbsp;•&nbsp; The Ultimate AI Summer Camp for Grades 6–9 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").map((text, i) => (
+            <span key={i} dangerouslySetInnerHTML={{ __html: text }} />
+          ))}
+        </div>
+      </div>
       <Navbar />
       <HeroSection />
       <CombinedSection />
