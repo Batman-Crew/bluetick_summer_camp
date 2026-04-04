@@ -384,7 +384,7 @@ if (enquireSuccess) {
   }
 
   return (
-    <section id="enrollment" className="bg-white py-14 md:py-20 md:px-30">
+    <section id="enrollment" className="bg-white py-4 md:py-20 md:px-30">
       <div className="mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 items-center">
 
@@ -844,7 +844,7 @@ function AIShapingSection() {
           <div className="mx-auto w-full max-w-[300px] order-1 md:order-2">
             <div className="overflow-hidden rounded-[18px] bg-[#eef3f4] shadow-[0_14px_26px_rgba(0,0,0,0.08)]">
               <div className="rounded-[18px] rounded-b-[14px] bg-[#cfc4f3] px-6 py-5 text-center shadow-[0_4px_0_rgba(0,0,0,0.10)]">
-                <span className="text-base font-semibold text-[#4c34a4]">10% Early bird till 15th March</span>
+                <span className="text-base font-semibold text-[#4c34a4]">25% Early bird till 15th April</span>
               </div>
               <div
                 className="px-6 py-5 text-center text-[15px] text-[#222222] cursor-pointer"

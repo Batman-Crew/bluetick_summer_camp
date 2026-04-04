@@ -80,10 +80,10 @@ export default function Footer() {
 
         {/* Phone */}
         <div className="col-span-12 md:col-span-2">
-          <Link href="tel:+919606681814">
+          <Link href="https://wa.me/919606333830">
             <div className="py-3 md:py-8 px-4 border-b md:border border-[#4F4F4F] flex gap-2 items-center">
               <Phone size={20} className="text-white shrink-0" />
-              <p className="text-white text-sm">+91-9606 6818 14</p>
+              <p className="text-white text-sm">+91-9606 3338 30</p>
             </div>
           </Link>
         </div>

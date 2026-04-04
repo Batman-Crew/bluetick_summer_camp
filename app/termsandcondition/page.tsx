@@ -126,7 +126,7 @@ export default function TermsAndConditions() {
             </p>
             <p>
               Phone:{" "}
-              <a href="tel:+919606681814" className="text-blue-500 underline">9606-6818-14</a>
+              <a href="https://wa.me/919606333830" className="text-blue-500 underline">9606-3338-30</a>
             </p>
           </div>
         </div>

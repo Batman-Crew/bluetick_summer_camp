@@ -19,7 +19,7 @@ export default function PrivacyPolicy() {
       <section className="max-w-3xl mx-auto px-4 py-12">
         <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">Privacy Policy - 2025</h1>
         <p className="text-sm md:text-base text-center mb-8 text-gray-600">
-          Bluetick Academy owned and operated by Tech Tree ("we," "our," or "us") respects your privacy and is committed to protecting it through this Privacy Policy.
+          BluetickAI Academy owned and operated by Tech Tree ("we," "our," or "us") respects your privacy and is committed to protecting it through this Privacy Policy.
         </p>
 
         <div className="space-y-6 text-sm md:text-base text-gray-700">
