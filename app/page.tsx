@@ -164,7 +164,7 @@ function CombinedSection() {
 
   return (
     <section
-      className="py-10 md:py-16 md:px-15"
+      className="py-2 md:py-16 md:px-15"
       style={{
         backgroundImage: `url(${HeroMiddleBg.src})`,
         backgroundSize: 'cover',
@@ -1011,6 +1011,11 @@ function LearningJourneySection() {
             <p className="text-4xl md:text-6xl font-bold text-gray-800">
               Learning Journey
             </p>
+
+            <span className="inline-block mt-4 bg-green-100 text-green-600 px-4 py-1 rounded-full text-sm font-semibold">
+              Live Online Sessions
+            </span>
+
           </div>
 
         {/* Grid */}
@@ -1059,8 +1064,8 @@ function LearningJourneySection() {
                 )}
 
                 {/* Title */}
-                <h3 className="font-semibold text-gray-900 mb-3 text-sm leading-snug">
-                  {week.title}
+                <h3 className="font-bold text-gray-900 mb-3 text-md leading-snug">
+                  {week?.title}
                 </h3>
 
                 {/* Topics */}
