@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { AgGridReact } from 'ag-grid-react'
 import { ColDef, ModuleRegistry, AllCommunityModule } from 'ag-grid-community'
 import AdminSidebar from '@/components/admin/AdminSidebar'
+import * as XLSX from 'xlsx'
 
 ModuleRegistry.registerModules([AllCommunityModule])
 
@@ -82,6 +83,7 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true)
   const [adminName, setAdminName] = useState('')
   const [updating, setUpdating] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Lead | null>(null)
 
   const getToken = useCallback(() => localStorage.getItem('admin_token') ?? '', [])
 
@@ -137,6 +139,46 @@ export default function LeadsPage() {
     } finally {
       setUpdating(null)
     }
+  }
+
+  const handleDeleteLead = async () => {
+    if (!deleteTarget) return
+    try {
+      const token = getToken()
+      const res = await fetch('/api/admin/leads', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id: deleteTarget.id }),
+      })
+      if (!res.ok) throw new Error('Failed to delete lead')
+      setLeads((prev) => prev.filter((l) => l.id !== deleteTarget.id))
+    } catch (error) {
+      console.error(error)
+      alert('Failed to delete lead')
+    } finally {
+      setDeleteTarget(null)
+    }
+  }
+
+  const handleExportExcel = () => {
+    const data = leads.map((l) => ({
+      Date: new Date(l.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+      Name: l.name,
+      Phone: l.phone,
+      Email: l.email,
+      Grade: l.grade || '—',
+      Batch: l.batch || l.enrollment?.batch || '—',
+      'Payment Status': l.paymentStatus,
+      'Lead Status': l.leadStatus,
+      Amount: l.enrollment?.finalAmount != null ? `₹${l.enrollment.finalAmount.toLocaleString('en-IN')}` : '—',
+    }))
+    const ws = XLSX.utils.json_to_sheet(data)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Leads')
+    XLSX.writeFile(wb, `leads_${new Date().toISOString().slice(0, 10)}.xlsx`)
   }
 
   const stats = useMemo(() => ({
@@ -206,6 +248,20 @@ export default function LeadsPage() {
         const amount = p.data?.enrollment?.finalAmount
         return amount != null ? `₹${amount.toLocaleString('en-IN')}` : '—'
       },
+    },
+    {
+      headerName: '', width: 60, sortable: false, filter: false, resizable: false,
+      cellRenderer: (p: { data: Lead }) => (
+        <button
+          onClick={() => setDeleteTarget(p.data)}
+          className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+          title="Delete lead"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </button>
+      ),
     },
   // eslint-disable-next-line react-hooks/exhaustive-deps
   ], [updating])
@@ -300,6 +356,15 @@ export default function LeadsPage() {
                 <h2 className="text-[15px] font-semibold text-gray-900">All Leads</h2>
                 <p className="text-xs text-gray-400 mt-0.5">{leads.length} total records</p>
               </div>
+              <button
+                onClick={handleExportExcel}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-green-600 text-white hover:bg-green-700"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Export Excel
+              </button>
             </div>
             <div className="ag-theme-alpine" style={{ height: 520 }}>
               <AgGridReact
@@ -314,6 +379,39 @@ export default function LeadsPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="rounded-full bg-red-100 p-2">
+                <svg className="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Delete Lead</h3>
+            </div>
+            <p className="text-sm text-gray-600 mb-6">
+              Are you sure you want to delete <span className="font-medium text-gray-900">{deleteTarget.name}</span>? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteLead}
+                className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

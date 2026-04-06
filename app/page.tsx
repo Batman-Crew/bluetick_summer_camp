@@ -232,120 +232,120 @@ function CombinedSection() {
     grade: "",
     school: "",
   })
-  const [paymentOption, setPaymentOption] = useState<"pay-now" | "enquire-later">("pay-now")
-  const [batchName, setBatchName] = useState("")
-  const [showPromo, setShowPromo] = useState(false)
-  const [promoCode, setPromoCode] = useState("")
-  const [promoApplied, setPromoApplied] = useState<{ discount: number; label: string } | null>(null)
-  const [promoError, setPromoError] = useState("")
-  const [promoLoading, setPromoLoading] = useState(false)
+  // const [paymentOption, setPaymentOption] = useState<"pay-now" | "enquire-later">("pay-now")
+  // const [batchName, setBatchName] = useState("")
+  // const [showPromo, setShowPromo] = useState(false)
+  // const [promoCode, setPromoCode] = useState("")
+  // const [promoApplied, setPromoApplied] = useState<{ discount: number; label: string } | null>(null)
+  // const [promoError, setPromoError] = useState("")
+  // const [promoLoading, setPromoLoading] = useState(false)
   const [payLoading, setPayLoading] = useState(false)
   const [enquireSuccess, setEnquireSuccess] = useState(false)
 
-  const [batches, setBatches] = useState<{ id: string; date: string; days?: string; soldOut?: boolean }[]>([])
-  const [batchDropdownOpen, setBatchDropdownOpen] = useState(false)
+  // const [batches, setBatches] = useState<{ id: string; date: string; days?: string; soldOut?: boolean }[]>([])
+  // const [batchDropdownOpen, setBatchDropdownOpen] = useState(false)
 
-  const finalAmount = promoApplied
-    ? Math.round(BASE_AMOUNT * (1 - promoApplied.discount / 100))
-    : BASE_AMOUNT
+  // const finalAmount = promoApplied
+  //   ? Math.round(BASE_AMOUNT * (1 - promoApplied.discount / 100))
+  //   : BASE_AMOUNT
 
-  useEffect(() => {
-    fetch("/api/batches").then((r) => r.json()).then(setBatches)
-  }, [])
+  // useEffect(() => {
+  //   fetch("/api/batches").then((r) => r.json()).then(setBatches)
+  // }, [])
 
   // Load Razorpay checkout script once
-  useEffect(() => {
-    const script = document.createElement("script")
-    script.src = "https://checkout.razorpay.com/v1/checkout.js"
-    script.async = true
-    document.body.appendChild(script)
-    return () => { document.body.removeChild(script) }
-  }, [])
+  // useEffect(() => {
+  //   const script = document.createElement("script")
+  //   script.src = "https://checkout.razorpay.com/v1/checkout.js"
+  //   script.async = true
+  //   document.body.appendChild(script)
+  //   return () => { document.body.removeChild(script) }
+  // }, [])
 
-  const handleApplyPromo = async () => {
-    if (!promoCode.trim()) return
-    setPromoLoading(true)
-    setPromoError("")
-    try {
-      const res = await fetch("/api/validate-promo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: promoCode }),
-      })
-      const data = await res.json()
-      if (data.valid) {
-        setPromoApplied({ discount: data.discount, label: data.label })
-        setPromoError("")
-      } else {
-        setPromoApplied(null)
-        setPromoError("Invalid promo code. Please try again.")
-      }
-    } finally {
-      setPromoLoading(false)
-    }
-  }
+  // const handleApplyPromo = async () => {
+  //   if (!promoCode.trim()) return
+  //   setPromoLoading(true)
+  //   setPromoError("")
+  //   try {
+  //     const res = await fetch("/api/validate-promo", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ code: promoCode }),
+  //     })
+  //     const data = await res.json()
+  //     if (data.valid) {
+  //       setPromoApplied({ discount: data.discount, label: data.label })
+  //       setPromoError("")
+  //     } else {
+  //       setPromoApplied(null)
+  //       setPromoError("Invalid promo code. Please try again.")
+  //     }
+  //   } finally {
+  //     setPromoLoading(false)
+  //   }
+  // }
 
-  const handleProceedToPayment = async () => {
-    if (!formData.name || !formData.phone || !formData.email || !batchName) return
-    setPayLoading(true)
-    try {
-      const res = await fetch("/api/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          batch: batchName,
-          promoCode: promoApplied ? promoCode : null,
-          amount: BASE_AMOUNT,
-          finalAmount,
-        }),
-      })
-      const { order } = await res.json()
-
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: order.amount,
-        currency: order.currency,
-        name: "BlueTick AI Summer Camp",
-        description: `Batch: ${batchName}`,
-        order_id: order.id,
-        handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
-          const verifyRes = await fetch("/api/verify-payment", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(response),
-          })
-          const data = await verifyRes.json()
-          if (data.success) {
-            toast.success("Payment Successful! We'll send details to " + formData.email + " shortly.")
-          }
-        },
-        prefill: {
-          name: formData.name,
-          email: formData.email,
-          contact: `+91${formData.phone}`,
-        },
-        notes: {
-          batch: batchName,
-          grade: formData.grade,
-          school: formData.school,
-        },
-        theme: { color: "#2563EB" },
-      }
-
-      const razorpay = new (window as unknown as { Razorpay: new (opts: typeof options) => { open: () => void } }).Razorpay(options)
-      razorpay.open()
-    } finally {
-      setPayLoading(false)
-      setFormData({
-        name: "",
-        phone: "",
-        email: "",
-        grade: "",
-        school: "",
-      })
-    }
-  }
+  // const handleProceedToPayment = async () => {
+  //   if (!formData.name || !formData.phone || !formData.email || !batchName) return
+  //   setPayLoading(true)
+  //   try {
+  //     const res = await fetch("/api/create-order", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         ...formData,
+  //         batch: batchName,
+  //         promoCode: promoApplied ? promoCode : null,
+  //         amount: BASE_AMOUNT,
+  //         finalAmount,
+  //       }),
+  //     })
+  //     const { order } = await res.json()
+  //
+  //     const options = {
+  //       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  //       amount: order.amount,
+  //       currency: order.currency,
+  //       name: "BlueTick AI Summer Camp",
+  //       description: `Batch: ${batchName}`,
+  //       order_id: order.id,
+  //       handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
+  //         const verifyRes = await fetch("/api/verify-payment", {
+  //           method: "POST",
+  //           headers: { "Content-Type": "application/json" },
+  //           body: JSON.stringify(response),
+  //         })
+  //         const data = await verifyRes.json()
+  //         if (data.success) {
+  //           toast.success("Payment Successful! Our learning advisor will reach out to you soon.")
+  //         }
+  //       },
+  //       prefill: {
+  //         name: formData.name,
+  //         email: formData.email,
+  //         contact: `+91${formData.phone}`,
+  //       },
+  //       notes: {
+  //         batch: batchName,
+  //         grade: formData.grade,
+  //         school: formData.school,
+  //       },
+  //       theme: { color: "#2563EB" },
+  //     }
+  //
+  //     const razorpay = new (window as unknown as { Razorpay: new (opts: typeof options) => { open: () => void } }).Razorpay(options)
+  //     razorpay.open()
+  //   } finally {
+  //     setPayLoading(false)
+  //     setFormData({
+  //       name: "",
+  //       phone: "",
+  //       email: "",
+  //       grade: "",
+  //       school: "",
+  //     })
+  //   }
+  // }
 
   const handleEnquire = async () => {
     if (!formData.name || !formData.phone || !formData.email) return
@@ -357,6 +357,7 @@ function CombinedSection() {
         body: JSON.stringify(formData),
       })
       setEnquireSuccess(true)
+      toast.success("Successfully enquired! Our learning advisor will reach out to you soon.")
     } finally {
       setPayLoading(false)
       setFormData({
@@ -376,7 +377,7 @@ if (enquireSuccess) {
           <div className="text-center p-10 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] max-w-md">
             <CheckCircle2 className="w-16 h-16 text-[#2563EB] mx-auto mb-4" />
             <h3 className="text-2xl font-bold mb-2">Enquiry Submitted!</h3>
-            <p className="text-gray-600">We'll reach out to <strong>{formData.email}</strong> soon with payment details.</p>
+            <p className="text-gray-600">Our learning advisor will reach out to you soon.</p>
           </div>
         </div>
       </section>
@@ -525,8 +526,8 @@ if (enquireSuccess) {
                 />
               </div>
 
-              {/* Payment Options */}
-              <div className="flex gap-4">
+              {/* Payment Options - commented out for now */}
+              {/* <div className="flex gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
@@ -546,15 +547,14 @@ if (enquireSuccess) {
                   />
                   <span className="text-sm">Enquire Now, Pay Later</span>
                 </label>
-              </div>
+              </div> */}
 
-              {/* Batch selection — only shown when Pay Now is selected */}
-              {paymentOption === "pay-now" && (
+              {/* Batch selection - commented out for now */}
+              {/* {paymentOption === "pay-now" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Select Batch
                   </label>
-                  {/* Custom batch dropdown for superscript ordinal rendering */}
                   <div className="relative">
                     <button
                       type="button"
@@ -600,10 +600,10 @@ if (enquireSuccess) {
                     )}
                   </div>
                 </div>
-              )}
+              )} */}
 
-              {/* Promo - only shown for Pay Now */}
-              {paymentOption === "pay-now" && (
+              {/* Promo - commented out for now */}
+              {/* {paymentOption === "pay-now" && (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <input
@@ -659,38 +659,22 @@ if (enquireSuccess) {
                     <p className="text-xs text-red-500">{promoError}</p>
                   )}
                 </div>
-              )}
+              )} */}
 
-              {/* Button */}
-              {paymentOption === "pay-now" ? (
-                <Button
-                  type="button"
-                  className="w-full bg-[#2563EB] text-white py-3 rounded-full text-lg hover:bg-[#1d4ed8] flex items-center justify-center gap-2 disabled:opacity-60"
-                  onClick={handleProceedToPayment}
-                  disabled={payLoading || !batchName || !formData.name || !formData.phone || !formData.email}
-                >
-                  {payLoading ? "Processing..." : `Proceed to Payment — ₹${finalAmount.toLocaleString()}`}
-                  {!payLoading && (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6l6 6-6 6" />
-                    </svg>
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  className="w-full bg-[#2563EB] text-white py-3 rounded-full text-lg hover:bg-[#1d4ed8] flex items-center justify-center gap-2 disabled:opacity-60"
-                  onClick={handleEnquire}
-                  disabled={payLoading || !formData.name || !formData.phone || !formData.email}
-                >
-                  {payLoading ? "Submitting..." : "Enroll Now"}
-                  {!payLoading && (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6l6 6-6 6" />
-                    </svg>
-                  )}
-                </Button>
-              )}
+              {/* Enroll Now Button — creates lead and shows success toast */}
+              <Button
+                type="button"
+                className="w-full bg-[#2563EB] text-white py-3 rounded-full text-lg hover:bg-[#1d4ed8] flex items-center justify-center gap-2 disabled:opacity-60"
+                onClick={handleEnquire}
+                disabled={payLoading || !formData.name || !formData.phone || !formData.email}
+              >
+                {payLoading ? "Submitting..." : "Enroll Now"}
+                {!payLoading && (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6l6 6-6 6" />
+                  </svg>
+                )}
+              </Button>
             </form>
           </div>
 
@@ -876,7 +860,7 @@ function LearningJourneySection() {
   const weeks = [
   {
     week: "Week 1: Session 1",
-    title: "AI Literacy – The Magic Behind the Screen",
+    title: "AI Literacy - What is Gen AI and How AI Works",
     topics: [
       "What is AI really? (It's not just magic, it's math)",
       "How LLMs (like ChatGPT) \"think.\"",
@@ -889,7 +873,7 @@ function LearningJourneySection() {
   },
   {
     week: "Week 1: Session 2",
-    title: "Master Prompting AI – The Art of Asking",
+    title: "Master Prompting AI – Using AI Efficiently ",
     topics: [
       "How to talk to AI to get 10x better results.",
       "Learning to give context, persona, and clear tasks.",
@@ -902,7 +886,7 @@ function LearningJourneySection() {
   },
   {
     week: "Week 2: Session 3",
-    title: "AI Digital Masterpiece – The Modern Day Van Gogh",
+    title: "AI Digital Masterpiece – Modern AI Art & Design Creation",
     topics: [
       "Understanding styles, lighting, and camera angles.",
       "Create with Leonardo.ai / DALL-E / Canva Magic Media.",
@@ -916,7 +900,7 @@ function LearningJourneySection() {
   {
     week: "Week 2: Session 4",
 
-    title: "Smart Presentations – Slides with AI",
+    title: "Smart Presentations – Create PPT Slides with AI",
     topics: [
       "Turning 10 pages of notes into 5 powerful slides.",
       "Using AI to design layouts that grab attention instantly.",
@@ -929,7 +913,7 @@ function LearningJourneySection() {
   },
   {
     week: "Week 3: Session 5",
-    title: "AI Soundscapes – The Creative Composer",
+    title: "AI Soundscapes – Compose Theme Music with AI",
     topics: [
       "Composing music and voiceovers using AI (Suno, Udio, or ElevenLabs).",
       "Translating emotions into musical genres.",
@@ -942,7 +926,7 @@ function LearningJourneySection() {
   },
   {
     week: "Week 3: Session 6",
-    title: "Virtual AI Filmmaking – The Director's Cut",
+    title: "Virtual AI Filmmaking – Produce AI Cinematic Scenes",
     topics: [
       "Using AI to generate consistent \"B-roll\" and cinematic shots.",
       "Understanding how to add life to static images.",
@@ -955,7 +939,7 @@ function LearningJourneySection() {
   },
   {
     week: "Week 4: Session 7",
-    title: "Build an AI Chatbot – Your Personal AI Tutor",
+    title: "Build an AI Chatbot – Create Your Personal AI Tutor",
     topics: [
       "How to give an AI a specific personality and knowledge base.",
       "Teaching the bot to follow a set of \"Rules.\"",
@@ -968,7 +952,7 @@ function LearningJourneySection() {
   },
   {
     week: "Week 4: Session 8",
-    title: "Critical Thinking in the Age of AI: Presentations & 2030 Vision",
+    title: "The Great Reveal – Projects & Future Paths.",
     topics: [
       "How to verify AI answers and spot mistakes. How to use AI ethically & responsibly.",
       "Presentations & future careers with AI.",

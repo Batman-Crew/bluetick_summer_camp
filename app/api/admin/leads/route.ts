@@ -30,6 +30,39 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// DELETE a lead
+export async function DELETE(req: NextRequest) {
+  try {
+    const token = req.headers.get('authorization')?.replace('Bearer ', '')
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { id } = await req.json()
+
+    if (!id) {
+      return NextResponse.json({ error: 'Missing lead id' }, { status: 400 })
+    }
+
+    // Fetch the lead to check for linked enrollment
+    const lead = await prisma.lead.findUnique({ where: { id } })
+    if (!lead) {
+      return NextResponse.json({ error: 'Lead not found' }, { status: 404 })
+    }
+
+    // Delete lead first (it holds the FK to enrollment), then the enrollment
+    await prisma.lead.delete({ where: { id } })
+    if (lead.enrollmentId) {
+      await prisma.enrollment.delete({ where: { id: lead.enrollmentId } })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Failed to delete lead:', error)
+    return NextResponse.json({ error: 'Failed to delete lead' }, { status: 500 })
+  }
+}
+
 // PATCH update lead status
 export async function PATCH(req: NextRequest) {
   try {
