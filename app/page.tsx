@@ -331,6 +331,11 @@ function CombinedSection() {
           school: formData.school,
         },
         theme: { color: "#2563EB" },
+        modal: {
+          ondismiss: () => {
+            toast.error("Payment cancelled. Please try again.")
+          },
+        },
       }
 
       const razorpay = new (window as unknown as { Razorpay: new (opts: typeof options) => { open: () => void } }).Razorpay(options)
