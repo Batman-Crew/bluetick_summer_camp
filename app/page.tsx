@@ -232,120 +232,120 @@ function CombinedSection() {
     grade: "",
     school: "",
   })
-  // const [paymentOption, setPaymentOption] = useState<"pay-now" | "enquire-later">("pay-now")
-  // const [batchName, setBatchName] = useState("")
-  // const [showPromo, setShowPromo] = useState(false)
-  // const [promoCode, setPromoCode] = useState("")
-  // const [promoApplied, setPromoApplied] = useState<{ discount: number; label: string } | null>(null)
-  // const [promoError, setPromoError] = useState("")
-  // const [promoLoading, setPromoLoading] = useState(false)
+  const [paymentOption, setPaymentOption] = useState<"pay-now" | "enquire-later">("pay-now")
+  const [batchName, setBatchName] = useState("")
+  const [showPromo, setShowPromo] = useState(false)
+  const [promoCode, setPromoCode] = useState("")
+  const [promoApplied, setPromoApplied] = useState<{ discount: number; label: string } | null>(null)
+  const [promoError, setPromoError] = useState("")
+  const [promoLoading, setPromoLoading] = useState(false)
   const [payLoading, setPayLoading] = useState(false)
   const [enquireSuccess, setEnquireSuccess] = useState(false)
 
-  // const [batches, setBatches] = useState<{ id: string; date: string; days?: string; soldOut?: boolean }[]>([])
-  // const [batchDropdownOpen, setBatchDropdownOpen] = useState(false)
+  const [batches, setBatches] = useState<{ id: string; date: string; days?: string; soldOut?: boolean }[]>([])
+  const [batchDropdownOpen, setBatchDropdownOpen] = useState(false)
 
-  // const finalAmount = promoApplied
-  //   ? Math.round(BASE_AMOUNT * (1 - promoApplied.discount / 100))
-  //   : BASE_AMOUNT
+  const finalAmount = promoApplied
+    ? Math.round(BASE_AMOUNT * (1 - promoApplied.discount / 100))
+    : BASE_AMOUNT
 
-  // useEffect(() => {
-  //   fetch("/api/batches").then((r) => r.json()).then(setBatches)
-  // }, [])
+  useEffect(() => {
+    fetch("/api/batches").then((r) => r.json()).then(setBatches)
+  }, [])
 
   // Load Razorpay checkout script once
-  // useEffect(() => {
-  //   const script = document.createElement("script")
-  //   script.src = "https://checkout.razorpay.com/v1/checkout.js"
-  //   script.async = true
-  //   document.body.appendChild(script)
-  //   return () => { document.body.removeChild(script) }
-  // }, [])
+  useEffect(() => {
+    const script = document.createElement("script")
+    script.src = "https://checkout.razorpay.com/v1/checkout.js"
+    script.async = true
+    document.body.appendChild(script)
+    return () => { document.body.removeChild(script) }
+  }, [])
 
-  // const handleApplyPromo = async () => {
-  //   if (!promoCode.trim()) return
-  //   setPromoLoading(true)
-  //   setPromoError("")
-  //   try {
-  //     const res = await fetch("/api/validate-promo", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ code: promoCode }),
-  //     })
-  //     const data = await res.json()
-  //     if (data.valid) {
-  //       setPromoApplied({ discount: data.discount, label: data.label })
-  //       setPromoError("")
-  //     } else {
-  //       setPromoApplied(null)
-  //       setPromoError("Invalid promo code. Please try again.")
-  //     }
-  //   } finally {
-  //     setPromoLoading(false)
-  //   }
-  // }
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim()) return
+    setPromoLoading(true)
+    setPromoError("")
+    try {
+      const res = await fetch("/api/validate-promo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promoCode }),
+      })
+      const data = await res.json()
+      if (data.valid) {
+        setPromoApplied({ discount: data.discount, label: data.label })
+        setPromoError("")
+      } else {
+        setPromoApplied(null)
+        setPromoError("Invalid promo code. Please try again.")
+      }
+    } finally {
+      setPromoLoading(false)
+    }
+  }
 
-  // const handleProceedToPayment = async () => {
-  //   if (!formData.name || !formData.phone || !formData.email || !batchName) return
-  //   setPayLoading(true)
-  //   try {
-  //     const res = await fetch("/api/create-order", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         ...formData,
-  //         batch: batchName,
-  //         promoCode: promoApplied ? promoCode : null,
-  //         amount: BASE_AMOUNT,
-  //         finalAmount,
-  //       }),
-  //     })
-  //     const { order } = await res.json()
-  //
-  //     const options = {
-  //       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-  //       amount: order.amount,
-  //       currency: order.currency,
-  //       name: "BlueTick AI Summer Camp",
-  //       description: `Batch: ${batchName}`,
-  //       order_id: order.id,
-  //       handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
-  //         const verifyRes = await fetch("/api/verify-payment", {
-  //           method: "POST",
-  //           headers: { "Content-Type": "application/json" },
-  //           body: JSON.stringify(response),
-  //         })
-  //         const data = await verifyRes.json()
-  //         if (data.success) {
-  //           toast.success("Payment Successful! Our learning advisor will reach out to you soon.")
-  //         }
-  //       },
-  //       prefill: {
-  //         name: formData.name,
-  //         email: formData.email,
-  //         contact: `+91${formData.phone}`,
-  //       },
-  //       notes: {
-  //         batch: batchName,
-  //         grade: formData.grade,
-  //         school: formData.school,
-  //       },
-  //       theme: { color: "#2563EB" },
-  //     }
-  //
-  //     const razorpay = new (window as unknown as { Razorpay: new (opts: typeof options) => { open: () => void } }).Razorpay(options)
-  //     razorpay.open()
-  //   } finally {
-  //     setPayLoading(false)
-  //     setFormData({
-  //       name: "",
-  //       phone: "",
-  //       email: "",
-  //       grade: "",
-  //       school: "",
-  //     })
-  //   }
-  // }
+  const handleProceedToPayment = async () => {
+    if (!formData.name || !formData.phone || !formData.email || !batchName) return
+    setPayLoading(true)
+    try {
+      const res = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          batch: batchName,
+          promoCode: promoApplied ? promoCode : null,
+          amount: BASE_AMOUNT,
+          finalAmount,
+        }),
+      })
+      const { order } = await res.json()
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency,
+        name: "BlueTick AI Summer Camp",
+        description: `Batch: ${batchName}`,
+        order_id: order.id,
+        handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
+          const verifyRes = await fetch("/api/verify-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(response),
+          })
+          const data = await verifyRes.json()
+          if (data.success) {
+            toast.success("Payment Successful! Our learning advisor will reach out to you soon.")
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: `+91${formData.phone}`,
+        },
+        notes: {
+          batch: batchName,
+          grade: formData.grade,
+          school: formData.school,
+        },
+        theme: { color: "#2563EB" },
+      }
+
+      const razorpay = new (window as unknown as { Razorpay: new (opts: typeof options) => { open: () => void } }).Razorpay(options)
+      razorpay.open()
+    } finally {
+      setPayLoading(false)
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        grade: "",
+        school: "",
+      })
+    }
+  }
 
   const handleEnquire = async () => {
     if (!formData.name || !formData.phone || !formData.email) return
@@ -526,8 +526,8 @@ if (enquireSuccess) {
                 />
               </div>
 
-              {/* Payment Options - commented out for now */}
-              {/* <div className="flex gap-4">
+              {/* Payment Options */}
+              <div className="flex gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
@@ -547,14 +547,15 @@ if (enquireSuccess) {
                   />
                   <span className="text-sm">Enquire Now, Pay Later</span>
                 </label>
-              </div> */}
+              </div>
 
-              {/* Batch selection - commented out for now */}
-              {/* {paymentOption === "pay-now" && (
+              {/* Batch selection — only shown when Pay Now is selected */}
+              {paymentOption === "pay-now" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Select Batch
                   </label>
+                  {/* Custom batch dropdown for superscript ordinal rendering */}
                   <div className="relative">
                     <button
                       type="button"
@@ -600,10 +601,10 @@ if (enquireSuccess) {
                     )}
                   </div>
                 </div>
-              )} */}
+              )}
 
-              {/* Promo - commented out for now */}
-              {/* {paymentOption === "pay-now" && (
+              {/* Promo - only shown for Pay Now */}
+              {paymentOption === "pay-now" && (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <input
@@ -659,22 +660,38 @@ if (enquireSuccess) {
                     <p className="text-xs text-red-500">{promoError}</p>
                   )}
                 </div>
-              )} */}
+              )}
 
-              {/* Enroll Now Button — creates lead and shows success toast */}
-              <Button
-                type="button"
-                className="w-full bg-[#2563EB] text-white py-3 rounded-full text-lg hover:bg-[#1d4ed8] flex items-center justify-center gap-2 disabled:opacity-60"
-                onClick={handleEnquire}
-                disabled={payLoading || !formData.name || !formData.phone || !formData.email}
-              >
-                {payLoading ? "Submitting..." : "Enroll Now"}
-                {!payLoading && (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6l6 6-6 6" />
-                  </svg>
-                )}
-              </Button>
+              {/* Button */}
+              {paymentOption === "pay-now" ? (
+                <Button
+                  type="button"
+                  className="w-full bg-[#2563EB] text-white py-3 rounded-full text-lg hover:bg-[#1d4ed8] flex items-center justify-center gap-2 disabled:opacity-60"
+                  onClick={handleProceedToPayment}
+                  disabled={payLoading || !batchName || !formData.name || !formData.phone || !formData.email}
+                >
+                  {payLoading ? "Processing..." : `Proceed to Payment — ₹${finalAmount.toLocaleString()}`}
+                  {!payLoading && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6l6 6-6 6" />
+                    </svg>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  className="w-full bg-[#2563EB] text-white py-3 rounded-full text-lg hover:bg-[#1d4ed8] flex items-center justify-center gap-2 disabled:opacity-60"
+                  onClick={handleEnquire}
+                  disabled={payLoading || !formData.name || !formData.phone || !formData.email}
+                >
+                  {payLoading ? "Submitting..." : "Enroll Now"}
+                  {!payLoading && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6l6 6-6 6" />
+                    </svg>
+                  )}
+                </Button>
+              )}
             </form>
           </div>
 
